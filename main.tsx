@@ -53,14 +53,6 @@ app.use(async (ctx) => {
   return await ctx.next();
 });
 
-// this is the same as the /api/:name route defined via a file. feel free to delete this!
-app.get("/api/:name", (ctx: Context<State>) => {
-  const name = ctx.params.name;
-  return new Response(
-    `Hello, ${name.charAt(0).toUpperCase() + name.slice(1)}!`,
-  );
-});
-
 app.use(staticFiles());
 // Include file-system based routes here
 app.fsRoutes();
