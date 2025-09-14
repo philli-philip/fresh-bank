@@ -1,0 +1,35 @@
+export type Todo = {
+  title: string;
+  id: number;
+  completed: boolean;
+};
+
+export type TransactionSummary = {
+  id: number;
+  currency: string;
+  credit_account_bank: "FRESH" | "other";
+  debit_account_bank: "FRESH" | "other";
+  amount: string;
+  date: string;
+  debit_account_number: string;
+  debit_account_id: number;
+  credit_account_number: string;
+  credit_account_id: number;
+};
+
+export type AccountType = "external" | "internal";
+
+export type Account = {
+  id: number;
+  number: string;
+  currency: string;
+  balance: number;
+  type: AccountType;
+};
+
+export const currencies = [{ name: "USD", digits: 2 }, {
+  name: "EUR",
+  digits: 2,
+}];
+
+export type Currency = (typeof currencies)[number];
