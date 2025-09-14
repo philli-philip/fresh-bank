@@ -18,7 +18,7 @@ app.post("/api/todos/toggle", async (ctx: Context<State>) => {
   });
 });
 
-app.notFound((ctx) => {
+app.notFound((ctx: Context<State>) => {
   return ctx.render(<Message title="404" subline="Page not found" />, {
     status: 404,
   });

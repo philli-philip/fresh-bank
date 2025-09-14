@@ -1,5 +1,5 @@
 import { Todo } from "../utils/types.ts";
-import { Check, Circle, Trash } from "lucide-preact";
+import { Check, Circle, Trash } from "npm:lucide-preact";
 import { cn } from "../utils/utils.ts";
 import Message from "./message.tsx";
 
