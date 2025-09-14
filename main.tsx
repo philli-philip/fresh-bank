@@ -1,4 +1,4 @@
-import { App, Context, staticFiles } from "fresh";
+import { App, Context, staticFiles, trailingSlashes } from "fresh";
 import { type State } from "./utils/utils.ts";
 import { addTodo, deleteTodo, toggleTodo } from "./services/todos.ts";
 import { createTransaction } from "./services/transactions.ts";
@@ -54,7 +54,7 @@ app.use(async (ctx) => {
 });
 
 app.use(staticFiles());
-// Include file-system based routes here
+app.use(trailingSlashes("never"));
 app.fsRoutes();
 
 setInterval(() => {
