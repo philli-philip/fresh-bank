@@ -52,38 +52,38 @@ export function Navigation({ ctx }: { ctx: Context<State> }) {
             Bank
           </a>
           <span class="text-gray-300 font-light">/</span>
-          <Dropdown>
-            <span class="flex flex-row items-center">
-              <a
-                class="px-3 py-1 block rounded hover:bg-gray-100"
-                href={`/bank/${currentCompany.slug}`}
-              >
-                {currentCompany.name}
-              </a>
+          <span class="flex flex-row items-center">
+            <a
+              class="px-3 py-1 block rounded hover:bg-gray-100"
+              href={`/bank/${currentCompany.slug}`}
+            >
+              {currentCompany.name}
+            </a>
+            <Dropdown>
               <button
-                class="px-2 py-1 cursor-pointer flex flex-row gap-2 h-8 items-center hover:bg-gray-100 rounded-sm cursor-pointer"
+                class="px-2 py-1 flex flex-row gap-2 h-8 items-center hover:bg-gray-100 rounded-sm cursor-pointer"
                 type="button"
               >
                 <ChevronsUpDown size="12" />
               </button>
-            </span>
-            <DropdownMenu>
-              <DropdownItemLink href={`/bank/all/${urlSection}`}>
-                All companies
-              </DropdownItemLink>
-              <DropdownItemDivider />
-              {companies.map((company) => (
-                <DropdownItemLink
-                  key={company.name}
-                  href={`/bank/${company.slug}/${
-                    urlSection === "bank" ? "" : urlSection
-                  }`}
-                >
-                  {company.name}
+              <DropdownMenu>
+                <DropdownItemLink href={`/bank/all/${urlSection}`}>
+                  All companies
                 </DropdownItemLink>
-              ))}
-            </DropdownMenu>
-          </Dropdown>
+                <DropdownItemDivider />
+                {companies.map((company) => (
+                  <DropdownItemLink
+                    key={company.name}
+                    href={`/bank/${company.slug}/${
+                      urlSection === "bank" ? "" : urlSection
+                    }`}
+                  >
+                    {company.name}
+                  </DropdownItemLink>
+                ))}
+              </DropdownMenu>
+            </Dropdown>
+          </span>
           {navObject.breadCrump.section && (
             <>
               <span class="text-gray-300 font-light">/</span>
