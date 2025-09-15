@@ -27,7 +27,7 @@ export function TransactionList(
 }
 
 const Transaction = ({ transaction }: { transaction: TransactionSummary }) => (
-  <li class="p-2 duration-75 justify-between items-center flex flex-row relative">
+  <li class="p-2 isolate duration-75 justify-between items-center flex flex-row relative">
     <a
       href={`/bank/all/transactions/${transaction.id}`}
       class="absolute inset-0 -z-10 hover:bg-gray-100"
