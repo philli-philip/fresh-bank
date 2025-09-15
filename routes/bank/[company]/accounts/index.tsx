@@ -3,9 +3,10 @@ import { getAccounts } from "@/services/accounts.ts";
 import { AccountList } from "@/components/bank/accountList.tsx";
 import { State } from "@/utils/utils.ts";
 import { Context } from "fresh";
+import { extractNavigation } from "@/utils/navigation.ts";
 
 export default function AccountsView(ctx: Context<State>) {
-  const company = ctx.params.company;
+  const { company } = extractNavigation(ctx);
   const filter = company !== "all" ? `accounts.company = '${company}'` : "1=1";
   const accounts = getAccounts({
     filter,

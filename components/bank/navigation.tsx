@@ -8,17 +8,10 @@ import {
   DropdownMenu,
 } from "../dropdown/dropdown.tsx";
 import { db } from "../../services/db.ts";
+import { extractNavigation } from "../../utils/navigation.ts";
 
 export function Navigation({ ctx }: { ctx: Context<State> }) {
-  console.log(ctx.params);
-  const pathname = ctx.url.pathname;
-  const item = ctx.url.pathname.split("/")[4] ?? undefined;
-  const urlSection = ctx.url.pathname.split("/")[3] ?? "bank";
-  const company = ctx.url.pathname.split("/")[2] ?? "all;";
-  console.log("Pathname: ", pathname);
-  console.log("Section: ", urlSection);
-  console.log("Company: ", company);
-  console.log("Item: ", item);
+  const { item, urlSection, company } = extractNavigation(ctx);
 
   const currentCompany = db
     .prepare(
