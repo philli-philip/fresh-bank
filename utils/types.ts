@@ -25,6 +25,7 @@ export type Account = {
   currency: string;
   balance: number;
   type: AccountType;
+  company: string;
 };
 
 export const currencies = [{ name: "USD", digits: 2 }, {

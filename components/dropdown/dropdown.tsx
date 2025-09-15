@@ -24,25 +24,26 @@ export function DropdownMenu({ children }: { children: ComponentChildren }) {
   );
 }
 
-export function DropdownItem({
+export function DropdownItemLink({
   children,
   href,
-  id,
 }: {
-  children: string;
+  children: ComponentChildren;
   href: string;
-  id: string;
 }) {
   return (
     <div class="block" role="none">
       <a
         href={href}
-        class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100"
+        class="text-gray-700 block px-4 py-2 hover:bg-gray-100"
         role="menuitem"
-        id={id}
       >
         {children}
       </a>
     </div>
   );
+}
+
+export function DropdownItemDivider() {
+  return <div class="my-1 h-[1px] bg-gray-200" />;
 }

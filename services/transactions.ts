@@ -1,7 +1,12 @@
 import { TransactionSummary } from "../utils/types.ts";
 import { db } from "./db.ts";
 
-export function getTransactionsSummary(limit?: number) {
+export function getTransactionsSummary(
+  options: { filter?: string; limit?: number } = {
+    filter: "1=1",
+    limit: 100,
+  },
+) {
   return db.prepare(
     `
 SELECT
@@ -30,10 +35,12 @@ FROM
 	LEFT JOIN external_accounts AS external_debit_accounts ON t.debit_account_id = external_debit_accounts.id
 	LEFT JOIN accounts AS internal_credit_accounts ON t.credit_account_id = internal_credit_accounts.id
 	LEFT JOIN external_accounts AS external_credit_accounts ON t.credit_account_id = external_credit_accounts.id
-ORDER BY 
+WHERE
+  ${options.filter}
+  ORDER BY 
 	t."date" DESC
 LIMIT
-  ${limit ?? 100}`,
+  ${options.limit ?? 100}`,
   ).all() as unknown as TransactionSummary[];
 }
 

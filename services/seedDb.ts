@@ -7,6 +7,7 @@ db.exec("DROP TABLE IF EXISTS transactions");
 db.exec("DROP TABLE IF EXISTS accounts");
 db.exec("DROP TABLE IF EXISTS external_accounts");
 db.exec("DROP TABLE IF EXISTS tasks");
+db.exec("DROP TABLE IF EXISTS companies");
 
 // Tasks
 db.exec(`
@@ -30,6 +31,30 @@ db.exec(`
   )
 `);
 
+// Companies
+db.exec(`
+  CREATE TABLE IF NOT EXISTS companies (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    slug TEXT NOT NULL UNIQUE,
+    legal_name TEXT NOT NULL,
+    name TEXT,
+    country TEXT NOT NULL
+  )
+`);
+
+db.exec(
+  "INSERT INTO companies (slug, legal_name, country) VALUES ('car-us', 'Carrot Limited US', 'US')",
+);
+db.exec(
+  "INSERT INTO companies (slug, legal_name, country, name) VALUES ('car-eu', 'Carrot AG EU', 'EU', 'Carrot EU')",
+);
+db.exec(
+  "INSERT INTO companies (slug, legal_name, country) VALUES ('car-it', 'Carrot Limited IT', 'IT')",
+);
+db.exec(
+  "INSERT INTO companies (slug, legal_name, country) VALUES ('car-uk', 'Carrot Limited UK', 'GB')",
+);
+
 db.exec(
   "INSERT INTO external_accounts (number, currency, bank) VALUES ('1234567890', 'USD', 'other')",
 );
@@ -43,17 +68,19 @@ db.exec(
     id INTEGER PRIMARY KEY AUTOINCREMENT, 
     number TEXT NOT NULL,
     currency TEXT CHECK(currency IN ('USD', 'EUR')),
-    balance Integer DEFAULT 0
+    balance Integer DEFAULT 0,
+    company TEXT,
+    FOREIGN KEY (company) REFERENCES companies (slug)
   )`,
 );
 
 // Accounts
 
 db.exec(
-  "INSERT INTO accounts (number, currency, balance) VALUES ('1234567890', 'USD', 0)",
+  "INSERT INTO accounts (number, currency, balance, company) VALUES ('1234567890', 'USD', 0, 'car-us')",
 );
 db.exec(
-  "INSERT INTO accounts (number, currency, balance) VALUES ('0987654321', 'EUR', 10000)",
+  "INSERT INTO accounts (number, currency, balance, company) VALUES ('0987654321', 'EUR', 10000, 'car-eu')",
 );
 
 // Transactions

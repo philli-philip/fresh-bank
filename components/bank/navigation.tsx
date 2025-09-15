@@ -1,16 +1,35 @@
 import { Context } from "fresh";
 import { State } from "../../utils/utils.ts";
 import { ChevronsUpDown } from "npm:lucide-preact";
-import { Dropdown, DropdownItem, DropdownMenu } from "../dropdown/dropdown.tsx";
+import {
+  Dropdown,
+  DropdownItemDivider,
+  DropdownItemLink,
+  DropdownMenu,
+} from "../dropdown/dropdown.tsx";
 import { db } from "../../services/db.ts";
 
 export function Navigation({ ctx }: { ctx: Context<State> }) {
-  console.log(ctx.url.pathname);
-
-  const item = ctx.url.pathname.split("/")[3] ?? undefined;
-  const urlSection = ctx.url.pathname.split("/")[2] ?? "bank";
+  console.log(ctx.params);
+  const pathname = ctx.url.pathname;
+  const item = ctx.url.pathname.split("/")[4] ?? undefined;
+  const urlSection = ctx.url.pathname.split("/")[3] ?? "bank";
+  const company = ctx.url.pathname.split("/")[2] ?? "all;";
+  console.log("Pathname: ", pathname);
   console.log("Section: ", urlSection);
+  console.log("Company: ", company);
   console.log("Item: ", item);
+
+  const currentCompany = db
+    .prepare(
+      "SELECT COALESCE(name, legal_name) as name, slug FROM companies WHERE slug = ?",
+    )
+    .get(company) as { name: string; slug: string } ??
+    { name: "All companies", slug: "all" };
+
+  const companies = db
+    .prepare("SELECT COALESCE(name, legal_name) as name, slug FROM companies")
+    .all() as { name: string; slug: string }[];
 
   let itemTitle = undefined;
   if (urlSection === "accounts" && item) {
@@ -19,7 +38,7 @@ export function Navigation({ ctx }: { ctx: Context<State> }) {
     )?.number as string;
   }
 
-  const navObject = buildNavigation(urlSection, itemTitle);
+  const navObject = buildNavigation(urlSection, company, itemTitle);
   console.log(navObject);
 
   return (
@@ -27,32 +46,45 @@ export function Navigation({ ctx }: { ctx: Context<State> }) {
       <div class="container mx-auto px-4 flex flex-col justify-between items-start">
         <div class=" flex flex-row items-center gap-2">
           <a
-            href="/bank"
-            class="text-black  font-semibold px-3 py-1 -ml-3 rounded hover:bg-gray-100 block"
+            href="/bank/all/"
+            class="text-black font-semibold px-3 py-1 -ml-3 rounded hover:bg-gray-100 block"
           >
             Bank
           </a>
           <span class="text-gray-300 font-light">/</span>
           <Dropdown>
-            <button
-              class="px-3 py-1 flex flex-row gap-2  items-center hover:bg-gray-100 rounded-sm cursor-pointer"
-              type="button"
-            >
-              All companies <ChevronsUpDown size="12" />
-            </button>
+            <span class="flex flex-row items-center">
+              <a
+                class="px-3 py-1 block rounded hover:bg-gray-100"
+                href={`/bank/${currentCompany.slug}`}
+              >
+                {currentCompany.name}
+              </a>
+              <button
+                class="px-2 py-1 cursor-pointer flex flex-row gap-2 h-8 items-center hover:bg-gray-100 rounded-sm cursor-pointer"
+                type="button"
+              >
+                <ChevronsUpDown size="12" />
+              </button>
+            </span>
             <DropdownMenu>
-              <DropdownItem href="bank/all" id="bank-all">
-                All
-              </DropdownItem>
-              <DropdownItem href="bank/company-a" id="bank-company-a">
-                Company A
-              </DropdownItem>
-              <DropdownItem href="bank/company-b" id="bank-company-a">
-                Company B
-              </DropdownItem>
+              <DropdownItemLink href={`/bank/all/${urlSection}`}>
+                All companies
+              </DropdownItemLink>
+              <DropdownItemDivider />
+              {companies.map((company) => (
+                <DropdownItemLink
+                  key={company.name}
+                  href={`/bank/${company.slug}/${
+                    urlSection === "bank" ? "" : urlSection
+                  }`}
+                >
+                  {company.name}
+                </DropdownItemLink>
+              ))}
             </DropdownMenu>
           </Dropdown>
-          {navObject.breadCrump && (
+          {navObject.breadCrump.section && (
             <>
               <span class="text-gray-300 font-light">/</span>
               <a
@@ -89,38 +121,43 @@ export function Navigation({ ctx }: { ctx: Context<State> }) {
   );
 }
 
-function buildNavigation(section: string, item?: string) {
+function buildNavigation(section: string, company: string, item?: string) {
   return {
-    breadCrump: buildBreadCrump(section, item),
-    tabNav: buildTabNav(section, item),
+    breadCrump: buildBreadCrump(section, company, item),
+    tabNav: buildTabNav(section, company, item),
   };
 }
 
-function buildBreadCrump(section: string, item?: string) {
+function buildBreadCrump(section: string, company: string, item?: string) {
   // If we do not have an item, we are in an overview
   if (!item) {
     return {
       section: sectionTitles[section as keyof typeof sectionTitles],
       title: undefined,
-      href: `/bank/${section}`,
+      href: `/bank/${company}/${section}`,
     };
   }
   // If we have an item, we are in a detail view
   return {
     section: sectionTitles[section as keyof typeof sectionTitles],
     title: item,
-    href: `/bank/${section}`,
+    href: `/bank/${company}/${section}`,
   };
 }
 
-function buildTabNav(section: string, itemLabel?: string) {
+function buildTabNav(section: string, company?: string, itemLabel?: string) {
   if (!itemLabel) {
-    return categoryNav[section as keyof typeof categoryNav];
+    return categoryNav[section as keyof typeof categoryNav].map(
+      (item) => ({
+        ...item,
+        href: item.href.replace("all", company ?? "all"),
+      }),
+    );
   }
 
   return detailNav[section as keyof typeof detailNav].map((item) => ({
     ...item,
-    href: item.href.replace("*", itemLabel ?? ""),
+    href: item.href.replace("all", company ?? ""),
   }));
 }
 
@@ -134,45 +171,45 @@ const sectionTitles = {
 const bank = [
   {
     name: "Dashboard",
-    href: "/bank",
+    href: "/bank/all",
   },
   {
     name: "Accounts",
-    href: "/bank/accounts",
+    href: "/bank/all/accounts",
   },
   {
     name: "Transactions",
-    href: "/bank/transactions",
+    href: "/bank/all/transactions",
   },
 ] as const;
 
 const accounts = [
   {
     name: "Balances",
-    href: "/bank/accounts",
+    href: "/bank/all/accounts",
   },
 ] as const;
 
 const accountDetails = [
   {
     name: "Overview",
-    href: "/bank/accounts/1",
+    href: "/bank/all/accounts/1",
   },
   {
     name: "Transactions",
-    href: "/bank/accounts/1/transactions",
+    href: "/bank/all/accounts/1/transactions",
   },
-  { name: "Statements", href: "/bank/accounts/1/statements" },
+  { name: "Statements", href: "/bank/all/accounts/1/statements" },
 ] as const;
 
 const transactions = [
   {
     name: "All",
-    href: "/bank/transactions",
+    href: "/bank/all/transactions",
   },
   {
     name: "Outgoing",
-    href: "/bank/transactions/outgoing",
+    href: "/bank/all/transactions/outgoing",
   },
 ] as const;
 

@@ -10,7 +10,7 @@ export function AccountList({ accounts }: { accounts: Account[] }) {
     <Card>
       {accounts.map((account) => (
         <a
-          href={`/bank/accounts/${account.id}`}
+          href={`/bank/${account.company}/accounts/${account.id}`}
           key={account.id}
           class="flex justify-between items-center flex-row p-3 not-last:border-b border-gray-200 hover:bg-gray-50"
         >

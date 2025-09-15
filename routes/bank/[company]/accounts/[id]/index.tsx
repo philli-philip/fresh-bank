@@ -1,9 +1,11 @@
 import { Head } from "fresh/runtime";
-import { getAccount } from "../../../../services/accounts.ts";
-import Message from "../../../../components/message.tsx";
-import { Card } from "../../../../components/card.tsx";
+import { getAccount } from "@/services/accounts.ts";
+import Message from "@/components/message.tsx";
+import { Card } from "@/components/card.tsx";
 
-export default function AccountDetail(ctx: { params: { id: string } }) {
+export default function AccountDetail(
+  ctx: { params: { company: string; id: string } },
+) {
   const account = getAccount(Number(ctx.params.id));
 
   if (isNaN(Number(ctx.params.id))) {
