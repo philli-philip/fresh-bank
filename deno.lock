@@ -36,13 +36,17 @@
     "npm:clsx@*": "2.1.1",
     "npm:esbuild-wasm@0.25.7": "0.25.7",
     "npm:esbuild@0.25.7": "0.25.7",
+    "npm:esbuild@~0.25.5": "0.25.7",
     "npm:lucide-preact@*": "0.544.0_preact@10.27.2",
     "npm:lucide-preact@0.544": "0.544.0_preact@10.27.2",
     "npm:preact-render-to-string@^6.5.11": "6.6.1_preact@10.27.2",
     "npm:preact@^10.27.0": "10.27.2",
     "npm:preact@^10.27.2": "10.27.2",
+    "npm:rollup@^4.50.0": "4.50.1",
     "npm:tailwind-merge@*": "3.3.1",
     "npm:tailwindcss@^4.1.13": "4.1.13",
+    "npm:vite@7.1.5": "7.1.5_picomatch@4.0.3_@types+node@24.2.0",
+    "npm:vite@^7.1.4": "7.1.5_picomatch@4.0.3_@types+node@24.2.0",
     "npm:vite@^7.1.5": "7.1.5_picomatch@4.0.3_@types+node@24.2.0"
   },
   "jsr": {
@@ -79,8 +83,8 @@
         "jsr:@std/uuid",
         "npm:@opentelemetry/api",
         "npm:@preact/signals@^2.2.1",
-        "npm:esbuild",
         "npm:esbuild-wasm",
+        "npm:esbuild@0.25.7",
         "npm:preact-render-to-string",
         "npm:preact@^10.27.0"
       ]
