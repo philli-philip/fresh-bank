@@ -19,15 +19,21 @@ SELECT
 	CASE 
 		WHEN t.debit_account_bank IN ('FRESH') THEN internal_debit_accounts.number ELSE external_debit_accounts.number
 	END as debit_account_number,
-  	CASE 
-		WHEN t.debit_account_bank IN ('FRESH') THEN internal_debit_accounts.id ELSE external_debit_accounts.id
+  CASE
+		WHEN t.debit_account_bank IN ('FRESH') THEN internal_debit_accounts.id ELSE NULL
 	END as debit_account_id,
-	CASE
-		WHEN t.credit_account_bank IN ('FRESH') THEN internal_credit_accounts.number ELSE external_credit_accounts.number
-	END as credit_account_number,
-  	CASE
+    CASE 
+		WHEN t.debit_account_bank IN ('FRESH') THEN internal_debit_accounts.company ELSE NULL
+	END as debit_account_company,
+    CASE 
+		WHEN t.credit_account_bank IN ('FRESH') THEN internal_credit_accounts.company ELSE NULL
+	END as credit_account_company,
+    CASE 
 		WHEN t.credit_account_bank IN ('FRESH') THEN internal_credit_accounts.id ELSE external_credit_accounts.id
-	END as credit_account_id
+	END as credit_account_id,
+    CASE 
+		WHEN t.credit_account_bank IN ('FRESH') THEN internal_credit_accounts.number ELSE external_credit_accounts.number
+	END as credit_account_number
 
 FROM
 	transactions AS t

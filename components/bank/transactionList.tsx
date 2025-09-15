@@ -45,7 +45,7 @@ const Transaction = ({ transaction }: { transaction: TransactionSummary }) => (
       To:{transaction.debit_account_bank === "FRESH"
         ? (
           <a
-            href={`/bank/account/${transaction.debit_account_id}`}
+            href={`/bank/${transaction.debit_account_company}/accounts/${transaction.debit_account_id}`}
             class="text-blue-700"
           >
             {transaction.debit_account_number}
@@ -69,7 +69,7 @@ const Transaction = ({ transaction }: { transaction: TransactionSummary }) => (
       To:{transaction.credit_account_bank === "FRESH"
         ? (
           <a
-            href={`/bank/account/${transaction.credit_account_id}`}
+            href={`/bank/${transaction.credit_account_company}/accounts/${transaction.credit_account_id}`}
             class="text-blue-700"
           >
             {transaction.credit_account_number}

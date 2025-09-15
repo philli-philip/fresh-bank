@@ -12,9 +12,11 @@ export type TransactionSummary = {
   amount: string;
   date: string;
   debit_account_number: string;
-  debit_account_id: number;
+  debit_account_id: number | null;
+  debit_account_company: string | null;
+  credit_account_company: string | null;
   credit_account_number: string;
-  credit_account_id: number;
+  credit_account_id: number | null;
 };
 
 export type AccountType = "external" | "internal";
