@@ -52,6 +52,7 @@ LIMIT
 
 export function createTransaction({
   amount,
+  hash,
   currency,
   date = new Date().toISOString(),
   debit_account_id,
@@ -60,6 +61,7 @@ export function createTransaction({
   credit_account_bank,
 }: {
   amount: string;
+  hash: string;
   currency: "USD" | "EUR";
   date?: string;
   debit_account_id: number;
@@ -68,8 +70,9 @@ export function createTransaction({
   credit_account_bank: "FRESH" | "other";
 }) {
   return db.prepare(
-    "INSERT INTO transactions (amount, currency, date, debit_account_id, credit_account_id, debit_account_bank, credit_account_bank) VALUES (?, ?, ?, ?, ?, ?, ?)",
+    "INSERT INTO transactions (hash, amount, currency, date, debit_account_id, credit_account_id, debit_account_bank, credit_account_bank) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
   ).run(
+    hash,
     amount,
     currency,
     date,

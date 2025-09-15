@@ -1,4 +1,5 @@
 import { DatabaseSync } from "node:sqlite";
+import { generateQuickHash } from "../utils/hash.ts";
 
 const db = new DatabaseSync("./data/db.sqlite");
 
@@ -87,6 +88,7 @@ db.exec(
 db.exec(`
   CREATE TABLE IF NOT EXISTS transactions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    hash TEXT NOT NULL,
     amount INTEGER NOT NULL,
     date TEXT DEFAULT CURRENT_TIMESTAMP NOT NULL,
     currency TEXT CHECK(currency IN ('USD', 'EUR')),
@@ -99,11 +101,17 @@ db.exec(`
 
 // Transactions
 db.exec(
-  "INSERT INTO transactions (amount, date, currency, debit_account_id, debit_account_bank, credit_account_id, credit_account_bank) VALUES ('10000', '2023-01-01T00:00:00', 'USD', 1, 'FRESH', 2, 'other')",
+  "INSERT INTO transactions (hash, amount, date, currency, debit_account_id, debit_account_bank, credit_account_id, credit_account_bank) VALUES ('" +
+    generateQuickHash(12) +
+    "', '10000', '2023-01-01T00:00:00', 'USD', 1, 'FRESH', 2, 'other')",
 );
 db.exec(
-  "INSERT INTO transactions (amount, date, currency, debit_account_id, debit_account_bank, credit_account_id, credit_account_bank) VALUES ('30000', '2023-01-01T00:00:00', 'EUR', 2, 'other', 1, 'FRESH')",
+  "INSERT INTO transactions (hash, amount, date, currency, debit_account_id, debit_account_bank, credit_account_id, credit_account_bank) VALUES ('" +
+    generateQuickHash(12) +
+    "', '30000', '2023-01-01T00:00:00', 'EUR', 2, 'other', 1, 'FRESH')",
 );
 db.exec(
-  "INSERT INTO transactions (amount, date, currency, debit_account_id, debit_account_bank, credit_account_id, credit_account_bank) VALUES ('20000', '2023-01-01T00:00:00', 'USD', 1, 'FRESH', 2, 'FRESH')",
+  "INSERT INTO transactions (hash, amount, date, currency, debit_account_id, debit_account_bank, credit_account_id, credit_account_bank) VALUES ('" +
+    generateQuickHash(12) +
+    "','20000', '2023-01-01T00:00:00', 'USD', 1, 'FRESH', 2, 'FRESH')",
 );

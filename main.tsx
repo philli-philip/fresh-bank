@@ -3,6 +3,7 @@ import { type State } from "./utils/utils.ts";
 import { addTodo, deleteTodo, toggleTodo } from "./services/todos.ts";
 import { createTransaction } from "./services/transactions.ts";
 import Message from "./components/message.tsx";
+import { generateQuickHash } from "./utils/hash.ts";
 
 export const app = new App<State>();
 
@@ -69,6 +70,7 @@ setInterval(() => {
     try {
       const transaction = createTransaction({
         amount: (Math.random() * 100000).toString(),
+        hash: generateQuickHash(12),
         currency: "USD",
         date: new Date().toISOString(),
         credit_account_bank: (Math.random() > 0.5 ? "FRESH" : "other"),

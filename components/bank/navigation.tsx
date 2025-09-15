@@ -29,13 +29,17 @@ export function Navigation({ ctx }: { ctx: Context<State> }) {
     itemTitle = db.prepare("SELECT number FROM accounts WHERE id = ?").get(
       item,
     )?.number as string;
+  } else if (urlSection === "transactions" && item) {
+    itemTitle = db.prepare("SELECT hash FROM transactions WHERE id = ?").get(
+      item,
+    )?.hash as string;
   }
 
-  const navObject = buildNavigation(urlSection, company, itemTitle);
+  const navObject = buildNavigation(urlSection, company, item, itemTitle);
   console.log(navObject);
 
   return (
-    <nav class="pt-3 border border-b border-gray-200 sticky top-0 bg-white">
+    <nav class="pt-3 border border-b border-gray-200 sticky top-0 z-10 bg-white">
       <div class="container mx-auto px-4 flex flex-col justify-between items-start">
         <div class=" flex flex-row items-center gap-2">
           <a
@@ -114,14 +118,23 @@ export function Navigation({ ctx }: { ctx: Context<State> }) {
   );
 }
 
-function buildNavigation(section: string, company: string, item?: string) {
+function buildNavigation(
+  section: string,
+  company: string,
+  itemID: string,
+  itemTitle?: string,
+) {
   return {
-    breadCrump: buildBreadCrump(section, company, item),
-    tabNav: buildTabNav(section, company, item),
+    breadCrump: buildBreadCrump(section, company, itemTitle),
+    tabNav: buildTabNav(section, company, itemID),
   };
 }
 
-function buildBreadCrump(section: string, company: string, item?: string) {
+function buildBreadCrump(
+  section: string,
+  company: string,
+  item?: string,
+) {
   // If we do not have an item, we are in an overview
   if (!item) {
     return {
@@ -138,8 +151,12 @@ function buildBreadCrump(section: string, company: string, item?: string) {
   };
 }
 
-function buildTabNav(section: string, company?: string, itemLabel?: string) {
-  if (!itemLabel) {
+function buildTabNav(
+  section: string,
+  company?: string,
+  itemID?: string,
+) {
+  if (!itemID) {
     return categoryNav[section as keyof typeof categoryNav].map(
       (item) => ({
         ...item,
@@ -150,7 +167,7 @@ function buildTabNav(section: string, company?: string, itemLabel?: string) {
 
   return detailNav[section as keyof typeof detailNav].map((item) => ({
     ...item,
-    href: item.href.replace("all", company ?? ""),
+    href: item.href.replace("all", company ?? "").replace("1", itemID),
   }));
 }
 
@@ -192,7 +209,6 @@ const accountDetails = [
     name: "Transactions",
     href: "/bank/all/accounts/1/transactions",
   },
-  { name: "Statements", href: "/bank/all/accounts/1/statements" },
 ] as const;
 
 const transactions = [
@@ -200,14 +216,22 @@ const transactions = [
     name: "All",
     href: "/bank/all/transactions",
   },
+] as const;
+
+const transactionDetails = [
   {
-    name: "Outgoing",
-    href: "/bank/all/transactions/outgoing",
+    name: "Overview",
+    href: "/bank/all/transactions/1",
+  },
+  {
+    name: "History",
+    href: "/bank/all/transactions/1/history",
   },
 ] as const;
 
 const detailNav = {
   accounts: accountDetails,
+  transactions: transactionDetails,
 };
 
 const categoryNav = {
