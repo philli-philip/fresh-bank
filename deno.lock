@@ -8,6 +8,7 @@
     "jsr:@fresh/core@2": "2.0.2",
     "jsr:@fresh/core@^2.0.2": "2.0.2",
     "jsr:@fresh/plugin-vite@^1.0.2": "1.0.2",
+    "jsr:@mwid/better-sse@~0.15.1": "0.15.1",
     "jsr:@std/bytes@^1.0.6": "1.0.6",
     "jsr:@std/dotenv@~0.225.5": "0.225.5",
     "jsr:@std/encoding@1": "1.0.10",
@@ -45,6 +46,7 @@
     "npm:rollup@^4.50.0": "4.50.1",
     "npm:tailwind-merge@*": "3.3.1",
     "npm:tailwindcss@^4.1.13": "4.1.13",
+    "npm:vite@*": "7.1.5_picomatch@4.0.3_@types+node@24.2.0",
     "npm:vite@7.1.5": "7.1.5_picomatch@4.0.3_@types+node@24.2.0",
     "npm:vite@^7.1.4": "7.1.5_picomatch@4.0.3_@types+node@24.2.0",
     "npm:vite@^7.1.5": "7.1.5_picomatch@4.0.3_@types+node@24.2.0"
@@ -103,6 +105,9 @@
         "npm:@mjackson/node-fetch-server",
         "npm:@prefresh/vite"
       ]
+    },
+    "@mwid/better-sse@0.15.1": {
+      "integrity": "92ee1f22bb910f6b8627157685e882625482b9bc32b7ecba6c9e4a934919d95b"
     },
     "@std/bytes@1.0.6": {
       "integrity": "f6ac6adbd8ccd99314045f5703e23af0a68d7f7e58364b47d2c7f408aeb5820a"
@@ -1376,6 +1381,7 @@
     "dependencies": [
       "jsr:@fresh/core@^2.0.2",
       "jsr:@fresh/plugin-vite@^1.0.2",
+      "jsr:@mwid/better-sse@~0.15.1",
       "npm:@preact/signals@^2.3.1",
       "npm:@tailwindcss/vite@^4.1.13",
       "npm:lucide-preact@0.544",

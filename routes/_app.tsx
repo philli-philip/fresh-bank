@@ -13,9 +13,17 @@ export default define.page((ctx) => {
           crossorigin="anonymous"
         >
         </script>
+
         <title>fresh-to-do</title>
       </head>
-      <body class="bg-gray-100 min-h-screen pb-24 flex flex-col">
+      <body class="bg-gray-100 min-h-screen pb-24 flex flex-col ">
+        {/* Toast container for notifications */}
+        <div
+          id="toast-container"
+          class="fixed"
+        >
+        </div>
+
         <Partial f-client-nav name="body">
           <ctx.Component />
         </Partial>

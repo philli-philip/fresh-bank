@@ -4,8 +4,12 @@ import { addTodo, deleteTodo, toggleTodo } from "./services/todos.ts";
 import { createTransaction } from "./services/transactions.ts";
 import Message from "./components/message.tsx";
 import { generateQuickHash } from "./utils/hash.ts";
+import { createResponse, Session } from "@mwid/better-sse";
+import { X } from "lucide-preact";
+import { renderToString } from "npm:preact-render-to-string";
 
 export const app = new App<State>();
+let sseSession: Session | undefined = undefined;
 
 app.post("/api/todos/toggle", async (ctx: Context<State>) => {
   const form = await ctx.req.formData();
@@ -39,9 +43,14 @@ app.post("/api/todos/create", async (ctx: Context<State>) => {
   });
 });
 
+app.get("/api/sse", async (ctx: Context<State>) => {
+  return await createResponse(ctx.req, (session) => {
+    sseSession = session;
+  });
+});
+
 app.post("/api/todos/delete", async (ctx: Context<State>) => {
   const id = (await ctx.req.formData()).get("id")?.toString();
-  console.log("delete: ", id);
   deleteTodo(Number(id));
   return new Response(null, {
     status: 200,
@@ -63,7 +72,7 @@ setInterval(() => {
   const randomNumber = Math.random();
 
   // 0.1% chance is 0.001
-  const probability = 0.5;
+  const probability = 1;
 
   // If the random number is less than the probability, log the message
   if (randomNumber < probability) {
@@ -78,9 +87,22 @@ setInterval(() => {
         credit_account_id: 1,
         debit_account_id: 2,
       });
+      if (!sseSession) {
+        console.error("no active session");
+        return;
+      }
+      const html = (
+        <div class="fixed bottom-4 right-4 z-50 animate-toast px-4 py-3 rounded-md shadow-lg border border-gray-200 shadow-2xl text-black">
+          <div class="flex items-center space-x-2">
+            <span>Transaction created</span>
+            <X />
+          </div>
+        </div>
+      );
+      sseSession.push(renderToString(html));
       console.log("create transaction: ", transaction.lastInsertRowid);
     } catch (error) {
       console.log("create transaction error: ", error);
     }
   }
-}, 1000 * 60 * 5);
+}, 1000 * 60);

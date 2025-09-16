@@ -2,7 +2,7 @@
   "nodeModulesDir": "auto",
   "tasks": {
     "check": "deno fmt --check . && deno lint . && deno check",
-    "dev": "vite",
+    "dev": "deno run --allow-all --unstable-broadcast-channel npm:vite",
     "build": "vite build",
     "start": "deno serve -A _fresh/server.js",
     "seed": "deno run -A services/seedDb.ts",
@@ -12,6 +12,7 @@
   "exclude": ["**/_fresh/*"],
   "imports": {
     "@/": "./",
+    "@mwid/better-sse": "jsr:@mwid/better-sse@^0.15.1",
     "fresh": "jsr:@fresh/core@^2.0.2",
     "preact": "npm:preact@^10.27.2",
     "@preact/signals": "npm:@preact/signals@^2.3.1",
