@@ -18,7 +18,15 @@ export function TransactionList(
   { transactions }: { transactions: TransactionSummary[] },
 ) {
   return (
-    <ul class="divide-y divide-gray-200 border border-gray-200 rounded bg-white">
+    <ul
+      id="transaction-list"
+      hx-ext="sse"
+      sse-connect="/api/sse"
+      sse-swap="message"
+      
+      hx-swap="afterbegin"
+      class="divide-y divide-gray-200 border border-gray-200 rounded bg-white"
+    >
       {transactions.map((transaction) => (
         <Transaction transaction={transaction} key={transaction.id} />
       ))}
@@ -26,7 +34,9 @@ export function TransactionList(
   );
 }
 
-const Transaction = ({ transaction }: { transaction: TransactionSummary }) => (
+export const Transaction = (
+  { transaction }: { transaction: TransactionSummary },
+) => (
   <li class="p-2 isolate duration-75 justify-between items-center flex flex-row relative">
     <a
       href={`/bank/all/transactions/${transaction.id}`}

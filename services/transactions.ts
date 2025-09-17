@@ -82,3 +82,51 @@ export function createTransaction({
     credit_account_bank,
   );
 }
+
+export function getTransaction(
+  options: { id: number; limit?: number } = {
+    id: 0,
+    limit: 100,
+  },
+) {
+  return db.prepare(
+    `
+SELECT
+	t.id,
+	t.currency,
+	t.credit_account_bank,
+	t.debit_account_bank,
+	t.amount,
+	t.date,
+  CASE 
+		WHEN t.debit_account_bank IN ('FRESH') THEN internal_debit_accounts.number ELSE external_debit_accounts.number
+	END as debit_account_number,
+  CASE
+		WHEN t.debit_account_bank IN ('FRESH') THEN internal_debit_accounts.id ELSE NULL
+	END as debit_account_id,
+    CASE 
+		WHEN t.debit_account_bank IN ('FRESH') THEN internal_debit_accounts.company ELSE NULL
+	END as debit_account_company,
+    CASE 
+		WHEN t.credit_account_bank IN ('FRESH') THEN internal_credit_accounts.company ELSE NULL
+	END as credit_account_company,
+    CASE 
+		WHEN t.credit_account_bank IN ('FRESH') THEN internal_credit_accounts.id ELSE external_credit_accounts.id
+	END as credit_account_id,
+    CASE 
+		WHEN t.credit_account_bank IN ('FRESH') THEN internal_credit_accounts.number ELSE external_credit_accounts.number
+	END as credit_account_number
+
+FROM
+	transactions AS t
+	LEFT JOIN accounts AS internal_debit_accounts ON t.debit_account_id = internal_debit_accounts.id
+	LEFT JOIN external_accounts AS external_debit_accounts ON t.debit_account_id = external_debit_accounts.id
+	LEFT JOIN accounts AS internal_credit_accounts ON t.credit_account_id = internal_credit_accounts.id
+	LEFT JOIN external_accounts AS external_credit_accounts ON t.credit_account_id = external_credit_accounts.id
+WHERE
+  t.id = ${options.id}
+  ORDER BY 
+	t.date DESC
+LIMIT ${options.limit ?? 1}`,
+  ).get() as TransactionSummary;
+}

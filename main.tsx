@@ -1,12 +1,13 @@
 import { App, Context, staticFiles, trailingSlashes } from "fresh";
 import { type State } from "./utils/utils.ts";
 import { addTodo, deleteTodo, toggleTodo } from "./services/todos.ts";
-import { createTransaction } from "./services/transactions.ts";
+import { createTransaction, getTransaction } from "./services/transactions.ts";
 import Message from "./components/message.tsx";
 import { generateQuickHash } from "./utils/hash.ts";
 import { createResponse, Session } from "@mwid/better-sse";
-import { X } from "lucide-preact";
 import { renderToString } from "npm:preact-render-to-string";
+import { Transaction } from "./components/bank/transactionList.tsx";
+import { probability } from "./utils/random.ts";
 
 export const app = new App<State>();
 let sseSession: Session | undefined = undefined;
@@ -43,8 +44,10 @@ app.post("/api/todos/create", async (ctx: Context<State>) => {
   });
 });
 
-app.get("/api/sse", async (ctx: Context<State>) => {
-  return await createResponse(ctx.req, (session) => {
+app.get("/api/sse", (ctx: Context<State>) => {
+  return createResponse(ctx.req, {
+    serializer: (e) => e as string,
+  }, (session) => {
     sseSession = session;
   });
 });
@@ -68,39 +71,37 @@ app.use(trailingSlashes("never"));
 app.fsRoutes();
 
 setInterval(() => {
-  // Generate a random number between 0 and 1
-  const randomNumber = Math.random();
-
-  // 0.1% chance is 0.001
-  const probability = 1;
-
-  // If the random number is less than the probability, log the message
-  if (randomNumber < probability) {
+  if (probability(0.1)) {
     try {
-      const transaction = createTransaction({
+      const transaction = {
         amount: (Math.random() * 100000).toString(),
         hash: generateQuickHash(12),
-        currency: "USD",
+        currency: "USD" as const,
         date: new Date().toISOString(),
-        credit_account_bank: (Math.random() > 0.5 ? "FRESH" : "other"),
-        debit_account_bank: (Math.random() > 0.5 ? "FRESH" : "other"),
+        credit_account_bank: (Math.random() > 0.5 ? "FRESH" : "other") as
+          | "FRESH"
+          | "other",
+        debit_account_bank: (Math.random() > 0.5 ? "FRESH" : "other") as
+          | "FRESH"
+          | "other",
         credit_account_id: 1,
         debit_account_id: 2,
+      };
+      const transID = createTransaction(transaction);
+      const newTransaction = getTransaction({
+        id: Number(transID.lastInsertRowid),
       });
-      if (!sseSession) {
-        console.error("no active session");
-        return;
+      if (newTransaction && sseSession) {
+        sseSession.push(renderToString(
+          <div class="animate-new">
+            <Transaction
+              transaction={{
+                ...newTransaction,
+              }}
+            />
+          </div>,
+        ));
       }
-      const html = (
-        <div class="fixed bottom-4 right-4 z-50 animate-toast px-4 py-3 rounded-md shadow-lg border border-gray-200 shadow-2xl text-black">
-          <div class="flex items-center space-x-2">
-            <span>Transaction created</span>
-            <X />
-          </div>
-        </div>
-      );
-      sseSession.push(renderToString(html));
-      console.log("create transaction: ", transaction.lastInsertRowid);
     } catch (error) {
       console.log("create transaction error: ", error);
     }

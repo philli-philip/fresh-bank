@@ -2,7 +2,22 @@
 
 
 @theme {  
-    --animate-toast: toast 5s;
+    --animate-toast: toast 5s linear;
+    --animate-new: new 300ms ease-in-out;
+
+    @keyframes new {
+        0% {
+            background-color: "#ccc";
+            overflow: hidden;
+            height: 0px;
+        }
+        100% {
+            background-color: "transparent";
+            overflow: hidden;
+            height: 40px;
+        }
+    }
+
     @keyframes toast {    
         0% {      
             transform: translateY(40px);  

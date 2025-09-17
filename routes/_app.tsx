@@ -13,6 +13,11 @@ export default define.page((ctx) => {
           crossorigin="anonymous"
         >
         </script>
+        <script
+          src="https://cdn.jsdelivr.net/npm/htmx-ext-sse@2.2.2"
+          crossorigin="anonymous"
+        >
+        </script>
 
         <title>fresh-to-do</title>
       </head>
