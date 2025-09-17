@@ -64,7 +64,9 @@ export function Navigation({ ctx }: { ctx: Context<State> }) {
                 <ChevronsUpDown size="12" />
               </button>
               <DropdownMenu>
-                <DropdownItemLink href={`/bank/all/${urlSection}`}>
+                <DropdownItemLink
+                  href={`/bank/all/${urlSection === "bank" ? "" : urlSection}`}
+                >
                   All companies
                 </DropdownItemLink>
                 <DropdownItemDivider />
