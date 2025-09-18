@@ -11,7 +11,6 @@ const amountFormat = Intl.NumberFormat("en-US", {
 const NumberFormat = Intl.NumberFormat("en-US", {});
 
 export default function DayRecap({ company }: { company: string }) {
-  console.log(company);
   const data = db.prepare(`
     SELECT
 	COUNT(*) as count,
