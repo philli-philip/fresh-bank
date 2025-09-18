@@ -71,6 +71,7 @@ db.exec(
     currency TEXT CHECK(currency IN ('USD', 'EUR')),
     balance Integer DEFAULT 0,
     company TEXT,
+    country TEXT NOT NULL DEFAULT DE,
     FOREIGN KEY (company) REFERENCES companies (slug)
   )`,
 );
@@ -78,10 +79,13 @@ db.exec(
 // Accounts
 
 db.exec(
-  "INSERT INTO accounts (number, currency, balance, company) VALUES ('1234567890', 'USD', 0, 'car-us')",
+  "INSERT INTO accounts (number, currency, balance, company, country) VALUES ('1234567890', 'USD', 0, 'car-us', 'US')",
 );
 db.exec(
   "INSERT INTO accounts (number, currency, balance, company) VALUES ('0987654321', 'EUR', 10000, 'car-eu')",
+);
+db.exec(
+  "INSERT INTO accounts (number, currency, balance, company, country) VALUES ('0987654322', 'EUR', 200000, 'car-it', 'IT')",
 );
 
 // Transactions

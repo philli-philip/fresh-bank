@@ -19,14 +19,11 @@ export type TransactionSummary = {
   credit_account_id: number | null;
 };
 
-export type AccountType = "external" | "internal";
-
 export type Account = {
   id: number;
   number: string;
   currency: string;
   balance: number;
-  type: AccountType;
   company: string;
 };
 
