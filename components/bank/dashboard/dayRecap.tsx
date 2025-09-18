@@ -1,5 +1,6 @@
 import { Card } from "@/components/card.tsx";
 import { db } from "@/services/db.ts";
+import { ChevronRight } from "lucide-preact";
 
 const amountFormat = Intl.NumberFormat("en-US", {
   minimumFractionDigits: 2,
@@ -27,16 +28,17 @@ WHERE
     sum_amount: number;
   };
   return (
-    <Card className="px-6 pt-6 pb-6 grid grid-cols-2">
-      <span class="text-sm block font-medium text-gray-700 pb-6 col-span-2">
+    <Card className="px-6 pt-6 pb-3 grid grid-cols-2">
+      <span class="text-sm block font-medium text-gray-700 pb-4 col-span-2">
         Debits last 24 hours
       </span>
       <a
         href={`/bank/${company}/transactions`}
-        className="hover:bg-gray-100 rounded p-1 pr-2 mr-2 -ml-1 -mt-1"
+        class="hover:bg-gray-100 rounded -ml-2 pl-2 -mt-2 pt-2 mr-4 pb-2 group"
       >
-        <span className="block">
+        <span class="flex flex-row gap-2 group-hover:gap-4 items-center duration-150">
           Transactions
+          <ChevronRight size="12" />
         </span>
         <span class="text-4xl font-semibold">
           {NumberFormat.format(data.count)}
@@ -44,9 +46,12 @@ WHERE
       </a>
       <a
         href={`/bank/${company}/transactions`}
-        className="hover:bg-gray-100 rounded p-1 -ml-1 -mt-1"
+        className="hover:bg-gray-100 rounded -ml-2 pl-2 -mt-2 pt-2 pb-2 group"
       >
-        <span className="block">Volume in USD</span>
+        <span class="flex flex-row gap-2 group-hover:gap-4 items-center duration-150">
+          Volume in USD
+          <ChevronRight size="12" />
+        </span>
         <span class="text-4xl font-semibold">
           {amountFormat.format(data.sum_amount / 100)}
         </span>

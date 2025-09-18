@@ -21,7 +21,7 @@ export default define.page((ctx) => {
 
         <title>fresh-to-do</title>
       </head>
-      <body class="bg-gray-100 min-h-screen pb-24 flex flex-col ">
+      <body class="bg-gray-50 min-h-screen pb-24 flex flex-col ">
         {/* Toast container for notifications */}
         <div
           id="toast-container"
