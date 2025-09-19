@@ -43,49 +43,17 @@ db.exec(`
   )
 `);
 
-db.exec(
-  "INSERT INTO companies (slug, legal_name, country) VALUES ('car-us', 'Carrot Limited US', 'US')",
-);
-db.exec(
-  "INSERT INTO companies (slug, legal_name, country, name) VALUES ('car-eu', 'Carrot AG EU', 'EU', 'Carrot EU')",
-);
-db.exec(
-  "INSERT INTO companies (slug, legal_name, country) VALUES ('car-it', 'Carrot Limited IT', 'IT')",
-);
-db.exec(
-  "INSERT INTO companies (slug, legal_name, country) VALUES ('car-uk', 'Carrot Limited UK', 'GB')",
-);
-
-db.exec(
-  "INSERT INTO external_accounts (number, currency, bank) VALUES ('1234567890', 'USD', 'other')",
-);
-db.exec(
-  "INSERT INTO external_accounts (number, currency, bank) VALUES ('0987654321', 'EUR', 'other')",
-);
-
 // Accounts
 db.exec(
   `CREATE TABLE IF NOT EXISTS accounts (
     id INTEGER PRIMARY KEY AUTOINCREMENT, 
-    number TEXT NOT NULL,
+    number TEXT NOT NULL UNIQUE,
     currency TEXT CHECK(currency IN ('USD', 'EUR')),
     balance Integer DEFAULT 0,
     company TEXT,
     country TEXT NOT NULL DEFAULT DE,
     FOREIGN KEY (company) REFERENCES companies (slug)
   )`,
-);
-
-// Accounts
-
-db.exec(
-  "INSERT INTO accounts (number, currency, balance, company, country) VALUES ('1234567890', 'USD', 0, 'car-us', 'US')",
-);
-db.exec(
-  "INSERT INTO accounts (number, currency, balance, company) VALUES ('0987654321', 'EUR', 10000, 'car-eu')",
-);
-db.exec(
-  "INSERT INTO accounts (number, currency, balance, company, country) VALUES ('0987654322', 'EUR', 200000, 'car-it', 'IT')",
 );
 
 // Transactions
@@ -103,19 +71,94 @@ db.exec(`
   );
 `);
 
-// Transactions
-db.exec(
-  "INSERT INTO transactions (hash, amount, date, currency, debit_account_id, debit_account_bank, credit_account_id, credit_account_bank) VALUES ('" +
-    generateQuickHash(12) +
-    "', '10000', '2023-01-01T00:00:00', 'USD', 1, 'FRESH', 2, 'other')",
-);
-db.exec(
-  "INSERT INTO transactions (hash, amount, date, currency, debit_account_id, debit_account_bank, credit_account_id, credit_account_bank) VALUES ('" +
-    generateQuickHash(12) +
-    "', '30000', '2023-01-01T00:00:00', 'EUR', 2, 'other', 1, 'FRESH')",
-);
-db.exec(
-  "INSERT INTO transactions (hash, amount, date, currency, debit_account_id, debit_account_bank, credit_account_id, credit_account_bank) VALUES ('" +
-    generateQuickHash(12) +
-    "','20000', '2023-01-01T00:00:00', 'USD', 1, 'FRESH', 2, 'FRESH')",
-);
+const countries = ["IT", "DE", "US"];
+const currencies = ["USD", "EUR"];
+const banks = ["FRESH", "other"];
+const companyNames = [{ legalName: "Carrot Plastics", slug: "carrot-plast" }, {
+  legalName: "Carrot Steel",
+  slug: "carrot-steel",
+}, {
+  legalName: "Carrot Oil",
+  slug: "carrot-oil",
+}];
+
+export function pickRandom<T>(
+  array: T[],
+): T {
+  return array[Math.floor(Math.random() * array.length)];
+}
+
+function createRandomCompany(count: number) {
+  for (let i = 0; i < count; i++) {
+    const item = {
+      slug: pickRandom(companyNames).slug,
+      legalName: pickRandom(companyNames).legalName,
+      country: pickRandom(countries),
+    };
+    db.exec(
+      `INSERT OR IGNORE INTO companies (slug, legal_name, country) VALUES ('${item.slug}', '${item.legalName}', '${item.country}')`,
+    );
+  }
+}
+
+function createRandomExtAccont(count: number) {
+  for (let i = 0; i < count; i++) {
+    const item = {
+      number: Math.floor(Math.random() * 100000) + 10000,
+      currency: pickRandom(currencies),
+      bank: pickRandom(["other"]),
+    };
+    db.exec(
+      `INSERT INTO external_accounts (number, currency, bank) VALUES ('${item.number}', '${item.currency}', '${item.bank}')`,
+    );
+  }
+}
+
+// Accounts
+
+function createRandomAccount(count: number) {
+  for (let i = 0; i < count; i++) {
+    const item = {
+      number: Math.floor(Math.random() * 100000) + 10_000_000,
+      currency: pickRandom(currencies),
+      balance: Math.random() * 100000,
+      companySlug: pickRandom(companyNames).slug,
+      country: pickRandom(countries),
+    };
+    db.exec(
+      `INSERT OR IGNORE INTO accounts (number, currency, balance, company, country) VALUES ('${item.number}', '${item.currency}', ${item.balance}, '${item.companySlug}', '${item.country}')`,
+    );
+  }
+}
+
+function createRandomTransaction(count: number) {
+  for (let i = 0; i < count; i++) {
+    const item = {
+      hash: generateQuickHash(12),
+      amount: Math.floor(Math.random() * 10000),
+      date: new Date((Math.random() * 50_000_000_000) + 1_720_000_000_000),
+      currency: pickRandom(currencies),
+      debit_account_id: Math.floor(Math.random() * 100),
+      credit_account_id: Math.floor(Math.random() * 100),
+      debit_account_bank: pickRandom(banks),
+      credit_account_bank: pickRandom(banks),
+    };
+    db.exec(
+      `INSERT INTO transactions (hash, amount, date, currency, debit_account_id, debit_account_bank, credit_account_id, credit_account_bank) 
+      VALUES (
+        '${item.hash}',
+        '${item.amount}',
+        '${item.date}',
+        '${item.currency}',
+        '${item.debit_account_id}',
+        '${item.debit_account_bank}',
+        '${item.credit_account_id}',
+        '${item.credit_account_bank}')`,
+    );
+  }
+}
+
+createRandomExtAccont(5);
+createRandomCompany(10);
+createRandomAccount(10);
+createRandomTransaction(100);
