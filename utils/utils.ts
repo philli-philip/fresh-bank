@@ -13,3 +13,13 @@ export const define = createDefine<State>();
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+export function isDev(): boolean {
+  if (
+    Deno.env.get("IS_DEV") === "true"
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+}

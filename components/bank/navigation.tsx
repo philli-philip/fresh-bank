@@ -1,5 +1,5 @@
 import { Context } from "fresh";
-import { State } from "../../utils/utils.ts";
+import { isDev, State } from "@/utils/utils.ts";
 import { ChevronsUpDown } from "npm:lucide-preact";
 import {
   Dropdown,
@@ -36,7 +36,7 @@ export function Navigation({ ctx }: { ctx: Context<State> }) {
   }
 
   const navObject = buildNavigation(urlSection, company, item, itemTitle);
-  console.log(navObject);
+  isDev() && console.log(navObject);
 
   return (
     <nav class="pt-3 border border-b border-gray-200 sticky top-0 z-10 bg-white">

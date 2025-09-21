@@ -12,6 +12,8 @@ import { probability } from "./utils/random.ts";
 export const app = new App<State>();
 let sseSession: Session | undefined = undefined;
 
+console.log("Debugging set to:", Deno.env.get("IS_DEV"));
+
 app.post("/api/todos/toggle", async (ctx: Context<State>) => {
   const form = await ctx.req.formData();
   const id = form.get("id")?.toString();
