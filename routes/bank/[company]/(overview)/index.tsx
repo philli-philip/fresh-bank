@@ -9,30 +9,31 @@ import {
   DropdownMenu,
 } from "@/components/dropdown/dropdown.tsx";
 import { Button } from "@/components/Button.tsx";
-import { ChevronDown, Plus } from "lucide-preact";
+import { Plus } from "lucide-preact";
 
 export default function Index(ctx: Context<State>) {
-  const company = ctx.params.company;
-  console.log("Company: ", company);
-  const companyName = db.prepare(`
+  const data = db.prepare(`
     SELECT
-      name as companyName
+      COALESCE (name, legal_name) as companyName
     FROM 
       companies
     WHERE 
       slug is ?
-    `).get(company);
+    `).get(ctx.params.company) as { companyName: string } | undefined;
 
-  console.log("Company name: ", companyName);
+  const title = ctx.params.company === "all"
+    ? "Dashboard"
+    : `Dashboard – ${data?.companyName}`;
+
   return (
     <div>
       <Head>
         <title>
-          {company === "all" ? "Dashboard" : `Dashboard – ${companyName}`}
+          {title}
         </title>
       </Head>
       <div class="flex flex-row justify-between pt-4 pb-6 items-center">
-        <h1 class="text-2xl font-medium">Dashboard</h1>
+        <h1 class="text-2xl font-medium">{title}</h1>
         <Dropdown>
           <Button type="button" size="medium">
             Create new <Plus size="20" />
@@ -45,7 +46,7 @@ export default function Index(ctx: Context<State>) {
         </Dropdown>
       </div>
       <main class="grid-cols-3 grid">
-        <DayRecap company={company} />
+        <DayRecap company={ctx.params.company} />
       </main>
     </div>
   );
