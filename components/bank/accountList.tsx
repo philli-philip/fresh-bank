@@ -2,16 +2,11 @@ import { ChevronRight } from "lucide-preact";
 import { Card } from "../card.tsx";
 import Message from "../message.tsx";
 import { getAccount } from "../../services/accounts.ts";
+import { countryFlags } from "@/data/countries.ts";
 
 const amountFormat = Intl.NumberFormat("en-US", {
   minimumFractionDigits: 2,
 });
-
-export const countryFlags = {
-  us: { emoji: "🇺🇸", name: "United States" },
-  eu: { emoji: "🇪🇺", name: "Europe" },
-  it: { emoji: "🇮🇹", name: "Italy" },
-};
 
 export function AccountList({ accounts }: { accounts: getAccount }) {
   if (accounts.length === 0) {
