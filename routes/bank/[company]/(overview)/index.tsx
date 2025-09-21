@@ -45,7 +45,7 @@ export default function Index(ctx: Context<State>) {
           </DropdownMenu>
         </Dropdown>
       </div>
-      <main class="grid-cols-3 grid">
+      <main class="grid-cols-1 md:grid-cols-2 lg:md-grid-cols-3 grid">
         <DayRecap company={ctx.params.company} />
       </main>
     </div>
