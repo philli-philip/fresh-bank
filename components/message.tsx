@@ -1,8 +1,10 @@
+import { ComponentChildren } from "preact";
+
 export default function Message(
   { title, subline, children }: {
     title?: string;
     subline?: string;
-    children?: ChildNode;
+    children?: ComponentChildren;
   },
 ) {
   return (
