@@ -1,6 +1,6 @@
 import { Context } from "fresh";
-import { Navigation } from "../../components/bank/navigation.tsx";
-import { State } from "../../utils/utils.ts";
+import { State } from "@/utils/utils.ts";
+import { Navigation } from "@/components/bank/navigation.tsx";
 
 export default function Layout(ctx: Context<State>) {
   return (

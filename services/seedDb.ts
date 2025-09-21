@@ -9,6 +9,7 @@ db.exec("DROP TABLE IF EXISTS accounts");
 db.exec("DROP TABLE IF EXISTS external_accounts");
 db.exec("DROP TABLE IF EXISTS tasks");
 db.exec("DROP TABLE IF EXISTS companies");
+db.exec("DROP TABLE IF EXISTS contacts");
 
 // Tasks
 db.exec(`
@@ -71,6 +72,21 @@ db.exec(`
   );
 `);
 
+db.exec(`
+  CREATE TABLE IF NOT EXISTS contacts (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  account_owner TEXT NOT NULL,
+  contact_label TEXT,
+  account_number TEXT NOT NULL,
+  bank TEXT NOT NULL,
+  currency TEXT NOT NULL,
+  town TEXT DEFAULT 'Berlin',
+  country TEXT DEFAULT 'DE',
+  eMail TEXT,
+  street TEXT
+  );
+`);
+
 const countries = ["IT", "DE", "US"];
 const currencies = ["USD", "EUR"];
 const banks = ["FRESH", "other"];
@@ -86,6 +102,31 @@ export function pickRandom<T>(
   array: T[],
 ): T {
   return array[Math.floor(Math.random() * array.length)];
+}
+
+export function accountNumberGenerator(): number {
+  return Math.floor(Math.random() * 100000) + 10_000_000;
+}
+
+const contacts = [{ legalName: "Rental office GmbH", name: "Landloard HQ" }, {
+  legalName: "Flower for Offic AG",
+  name: "Flower subsciption",
+}];
+
+function createRandomeContacts(count: number) {
+  for (let i = 0; i < count; i++) {
+    const item = {
+      accountOwner: pickRandom(contacts).legalName,
+      contact_label: pickRandom(contacts).name,
+      account_number: accountNumberGenerator(),
+      bank: "other",
+      currency: pickRandom(currencies),
+    };
+    db.exec(`
+      INSERT OR IGNORE INTO contacts (account_owner, contact_label, account_number, bank, currency) 
+        VALUES ('${item.accountOwner}', '${item.contact_label}', '${item.account_number}', '${item.bank}', '${item.currency}')
+      `);
+  }
 }
 
 function createRandomCompany(count: number) {
@@ -104,7 +145,7 @@ function createRandomCompany(count: number) {
 function createRandomExtAccont(count: number) {
   for (let i = 0; i < count; i++) {
     const item = {
-      number: Math.floor(Math.random() * 100000) + 10000,
+      number: accountNumberGenerator(),
       currency: pickRandom(currencies),
       bank: pickRandom(["other"]),
     };
@@ -119,7 +160,7 @@ function createRandomExtAccont(count: number) {
 function createRandomAccount(count: number) {
   for (let i = 0; i < count; i++) {
     const item = {
-      number: Math.floor(Math.random() * 100000) + 10_000_000,
+      number: accountNumberGenerator(),
       currency: pickRandom(currencies),
       balance: Math.random() * 100000,
       companySlug: pickRandom(companyNames).slug,
@@ -138,8 +179,8 @@ function createRandomTransaction(count: number) {
       amount: Math.floor(Math.random() * 10000),
       date: new Date((Math.random() * 50_000_000_000) + 1_720_000_000_000),
       currency: pickRandom(currencies),
-      debit_account_id: Math.floor(Math.random() * 100),
-      credit_account_id: Math.floor(Math.random() * 100),
+      debit_account_id: Math.floor(Math.random() * 10),
+      credit_account_id: Math.floor(Math.random() * 10),
       debit_account_bank: pickRandom(banks),
       credit_account_bank: pickRandom(banks),
     };
@@ -158,6 +199,7 @@ function createRandomTransaction(count: number) {
   }
 }
 
+createRandomeContacts(5);
 createRandomExtAccont(5);
 createRandomCompany(10);
 createRandomAccount(10);
