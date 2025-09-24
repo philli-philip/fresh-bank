@@ -1,4 +1,3 @@
-import { Head } from "fresh/runtime";
 import { Card } from "@/components/card.tsx";
 import { TransactionList } from "@/components/bank/transactionList.tsx";
 import { extractNavigation } from "@/utils/navigation.ts";
