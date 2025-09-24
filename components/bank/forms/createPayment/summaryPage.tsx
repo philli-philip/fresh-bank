@@ -58,7 +58,7 @@ export function SummaryPage(
         </div>
         <div class="grid grid-cols-[1fr_3fr] gap-2 pb-8">
           <span class="">Amount</span>
-          <span>{renderAmount(summary.amount, summary.currency)}</span>
+          <span>{renderAmount(summary.amount / 100, summary.currency)}</span>
           <span class="">Reference</span>
           <span>{summary.reference_text}</span>
           <span class="">Execution</span>

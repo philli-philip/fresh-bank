@@ -54,7 +54,7 @@ export function AmountPage(
                 placeholder="0.00"
                 class="p-4"
                 required
-                value={amount}
+                value={amount && (amount / 100)}
               />
             </div>
           </label>

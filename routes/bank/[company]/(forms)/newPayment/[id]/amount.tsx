@@ -33,14 +33,14 @@ export const handler = define.handlers({
     const formData = await ctx.req.formData();
     isDev() && console.log("FOrm:", formData);
 
-    const amountData = formData.get("amount")?.toString();
+    const amountData = Number(formData.get("amount")) * 100;
     const reference = formData.get("reference")?.toString();
     const id = Number(formData.get("process"));
 
     db.prepare(
       `UPDATE draft_payments
       SET
-        amount = ${amountData},
+        amount = '${amountData}',
         reference_text = '${reference}'
       WHERE id = ${id}`,
     )
