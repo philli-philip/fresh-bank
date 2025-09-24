@@ -8,6 +8,7 @@ import {
 } from "@/components/dropdown/dropdown.tsx";
 import { MoreVertical, Plus, Trash } from "lucide-preact";
 import { LinkButton } from "@/components/Button.tsx";
+import { PageHeader } from "@/components/bank/pageHeader.tsx";
 
 export const handler = define.handlers({
   async POST(ctx) {
@@ -38,14 +39,13 @@ export default define.page(() => {
     beneficiary?: string;
   }[];
   return (
-    <div>
-      <div class=" pb-2 flex flex-row justify-between gap-2 items-center">
-        <h1 class="font-semibold">Drafted payments</h1>
-        <LinkButton href="/bank/all/newPayment" size="small">
+    <>
+      <PageHeader title="Drafted payments">
+        <LinkButton href="/bank/all/newPayment">
           <Plus size="16" />
           New payment
         </LinkButton>
-      </div>
+      </PageHeader>
       <Card className="overflow-hidden">
         <ul>
           {drafted.map((item) => (
@@ -87,6 +87,6 @@ export default define.page(() => {
           ))}
         </ul>
       </Card>
-    </div>
+    </>
   );
 });

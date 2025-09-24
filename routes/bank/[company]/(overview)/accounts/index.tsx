@@ -4,6 +4,7 @@ import { AccountList } from "@/components/bank/accountList.tsx";
 import { State } from "@/utils/utils.ts";
 import { Context } from "fresh";
 import { extractNavigation } from "@/utils/navigation.ts";
+import { PageHeader } from "@/components/bank/pageHeader.tsx";
 
 export default function AccountsView(ctx: Context<State>) {
   const { company } = extractNavigation(ctx);
@@ -13,10 +14,7 @@ export default function AccountsView(ctx: Context<State>) {
   });
   return (
     <>
-      <Head>
-        <title>Accounts</title>
-      </Head>
-      <h1 class="text-2xl font-bold pb-4">Accounts</h1>
+      <PageHeader title="Accounts" />
       <AccountList accounts={accounts} />
     </>
   );

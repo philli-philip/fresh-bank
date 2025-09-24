@@ -6,7 +6,7 @@ export default function Layout(ctx: Context<State>) {
   return (
     <>
       <Navigation ctx={ctx} />
-      <main class="container px-4 mx-auto pt-3">
+      <main class="container px-4 mx-auto">
         <ctx.Component />
       </main>
     </>

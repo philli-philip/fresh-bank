@@ -10,6 +10,7 @@ import {
 } from "@/components/dropdown/dropdown.tsx";
 import { Button } from "@/components/Button.tsx";
 import { Plus } from "lucide-preact";
+import { PageHeader } from "../../../../components/bank/pageHeader.tsx";
 
 export default function Index(ctx: Context<State>) {
   const data = db.prepare(`
@@ -26,28 +27,24 @@ export default function Index(ctx: Context<State>) {
     : `Dashboard – ${data?.companyName}`;
 
   return (
-    <div>
-      <Head>
-        <title>
-          {title}
-        </title>
-      </Head>
-      <div class="flex flex-row justify-between pt-4 pb-6 items-center">
-        <h1 class="text-2xl font-medium">{title}</h1>
+    <>
+      <PageHeader title={title} pageTitle={title}>
         <Dropdown>
           <Button type="button" size="medium">
             Create new <Plus size="20" />
           </Button>
           <DropdownMenu position="right">
-            <DropdownItemLink href={`/bank/${ctx.params.company}/newPayment/`}>
+            <DropdownItemLink
+              href={`/bank/${ctx.params.company}/newPayment/`}
+            >
               New payment
             </DropdownItemLink>
           </DropdownMenu>
         </Dropdown>
-      </div>
+      </PageHeader>
       <main class="grid-cols-1 md:grid-cols-2 lg:md-grid-cols-3 grid">
         <DayRecap company={ctx.params.company} />
       </main>
-    </div>
+    </>
   );
 }

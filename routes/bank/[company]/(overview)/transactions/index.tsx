@@ -6,6 +6,7 @@ import { Context } from "fresh";
 import { State } from "@/utils/utils.ts";
 import { LinkButton } from "@/components/Button.tsx";
 import { Plus } from "lucide-preact";
+import { PageHeader } from "../../../../../components/bank/pageHeader.tsx";
 
 export default function Transactions(ctx: Context<State>) {
   const company = ctx.params.company;
@@ -17,13 +18,12 @@ export default function Transactions(ctx: Context<State>) {
   });
   return (
     <>
-      <div class=" pb-2 flex flex-row gap-2 items-center justify-between">
-        <h1 class="font-bold">All transactions</h1>
-        <LinkButton href="/bank/all/newPayment" size="small">
+      <PageHeader title="All transactions" pageTitle="All transactions">
+        <LinkButton href="/bank/all/newPayment">
           <Plus size="16" />
           New payment
         </LinkButton>
-      </div>
+      </PageHeader>
       {transactions.length === 0
         ? (
           <Card className="p-16">
