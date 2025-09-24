@@ -34,16 +34,12 @@ export const handler = define.handlers({
 
     const amountData = formData.get("amount")?.toString();
     const reference = formData.get("reference")?.toString();
-    const bene_id = Number(formData.get("beneficiary"));
     const id = Number(formData.get("process"));
-
-    console.log("BENE:", bene_id);
 
     db.prepare(
       `UPDATE draft_payments
       SET
         amount = ${amountData},
-        beneficiary_id = ${bene_id},
         reference_text = '${reference}'
       WHERE id = ${id}`,
     )
