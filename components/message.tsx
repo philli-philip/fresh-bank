@@ -11,12 +11,17 @@ export default function Message(
 ) {
   return (
     <div
-      class={cn("grow flex flex-col items-center justify-center", className)}
+      class={cn(
+        "grow flex flex-col items-center justify-center",
+        className,
+      )}
     >
-      <h3>{title}</h3>
-      <p>{subline}</p>
-      <div>
-        {children}
+      <div class="flex flex-col items-start">
+        <p class="font-semibold text-lg">{title}</p>
+        <p class="pb-4 text-gray-700">{subline}</p>
+        <div>
+          {children}
+        </div>
       </div>
     </div>
   );

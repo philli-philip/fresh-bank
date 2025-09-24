@@ -21,7 +21,11 @@ export function ContactList(
         <Search search={search} />
         {contacts.length === 0
           ? (
-            <Message title="No items found" className="px-24 py-16">
+            <Message
+              title="No matches"
+              subline="No beneficiary matched your search term."
+              className="px-24 py-16"
+            >
               <LinkButton href="./newPayment/">Remove filter</LinkButton>
             </Message>
           )
