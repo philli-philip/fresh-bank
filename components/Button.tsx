@@ -5,6 +5,7 @@ export interface ButtonProps {
   id?: string;
   onClick?: () => void;
   children?: ComponentChildren;
+  form?: string;
   disabled?: boolean;
   type?: "button" | "submit" | "reset";
   class?: string;
@@ -28,5 +29,31 @@ export function Button(props: ButtonProps) {
         sizes[props.size ?? "medium"],
       )}
     />
+  );
+}
+
+interface LinkProps {
+  id?: string;
+  href?: string;
+  children?: ComponentChildren;
+  disabled?: boolean;
+  type?: "button" | "submit" | "reset";
+  class?: string;
+  size?: "small" | "medium" | "large";
+}
+
+export function LinkButton(props: LinkProps) {
+  return (
+    <a
+      {...props}
+      href={props.href}
+      class={cn(
+        "button-secondary flex flex-row gap-2 items-center px-2 py-1 cursor-pointer bg-blue-900 hover:bg-blue-800 duration-100 text-white transition-colors",
+        props.class,
+        sizes[props.size ?? "medium"],
+      )}
+    >
+      {props.children}
+    </a>
   );
 }

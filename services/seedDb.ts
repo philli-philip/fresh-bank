@@ -10,6 +10,7 @@ db.exec("DROP TABLE IF EXISTS external_accounts");
 db.exec("DROP TABLE IF EXISTS tasks");
 db.exec("DROP TABLE IF EXISTS companies");
 db.exec("DROP TABLE IF EXISTS contacts");
+db.exec("DROP TABLE IF EXISTS draft_payments");
 
 // Tasks
 db.exec(`
@@ -86,6 +87,14 @@ db.exec(`
   street TEXT
   );
 `);
+
+db.exec(`
+  CREATE TABLE IF NOT EXISTS draft_payments(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    beneficiary_id INTEGER,
+    amount INTEGER,
+    reference_text TEXT
+  )`);
 
 const countries = ["IT", "DE", "US"];
 const currencies = ["USD", "EUR"];

@@ -39,7 +39,7 @@ export default function Index(ctx: Context<State>) {
             Create new <Plus size="20" />
           </Button>
           <DropdownMenu position="right">
-            <DropdownItemLink href="/bank/all/newPayment/">
+            <DropdownItemLink href={`/bank/${ctx.params.company}/newPayment/`}>
               New payment
             </DropdownItemLink>
           </DropdownMenu>
