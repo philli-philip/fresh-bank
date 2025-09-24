@@ -93,7 +93,8 @@ db.exec(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     beneficiary_id INTEGER,
     amount INTEGER,
-    reference_text TEXT
+    reference_text TEXT,
+    status TEXT CHECK(status IN ('hidden', 'created')) DEFAULT hidden
   )`);
 
 const countries = ["IT", "DE", "US"];
