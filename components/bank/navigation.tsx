@@ -218,6 +218,10 @@ const transactions = [
     name: "All",
     href: "/bank/all/transactions",
   },
+  {
+    name: "Drafted",
+    href: "/bank/all/transactions/drafted",
+  },
 ] as const;
 
 const transactionDetails = [
