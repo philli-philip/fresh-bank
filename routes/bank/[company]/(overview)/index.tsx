@@ -10,7 +10,8 @@ import {
 } from "@/components/dropdown/dropdown.tsx";
 import { Button } from "@/components/Button.tsx";
 import { Plus } from "lucide-preact";
-import { PageHeader } from "../../../../components/bank/pageHeader.tsx";
+import { PageHeader } from "@/components/bank/pageHeader.tsx";
+import { Authorisation } from "@/components/bank/dashboard/authorisation.tsx";
 
 export default function Index(ctx: Context<State>) {
   const data = db.prepare(`
@@ -42,8 +43,9 @@ export default function Index(ctx: Context<State>) {
           </DropdownMenu>
         </Dropdown>
       </PageHeader>
-      <main class="grid-cols-1 md:grid-cols-2 lg:md-grid-cols-3 grid">
+      <main class="grid-cols-1 md:grid-cols-2 lg:md-grid-cols-3 grid gap-8">
         <DayRecap company={ctx.params.company} />
+        <Authorisation company={ctx.params.company} />
       </main>
     </>
   );

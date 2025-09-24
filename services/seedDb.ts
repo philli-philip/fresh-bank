@@ -94,7 +94,7 @@ db.exec(`
     beneficiary_id INTEGER,
     amount INTEGER,
     reference_text TEXT,
-    status TEXT CHECK(status IN ('hidden', 'created')) DEFAULT hidden
+    status TEXT CHECK(status IN ('hidden', 'authorisation')) DEFAULT hidden
   )`);
 
 const countries = ["IT", "DE", "US"];

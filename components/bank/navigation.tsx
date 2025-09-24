@@ -219,6 +219,10 @@ const transactions = [
     href: "/bank/all/transactions",
   },
   {
+    name: "Pending",
+    href: "/bank/all/transactions/pending",
+  },
+  {
     name: "Drafted",
     href: "/bank/all/transactions/drafted",
   },

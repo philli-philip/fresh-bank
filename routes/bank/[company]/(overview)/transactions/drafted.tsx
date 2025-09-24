@@ -48,7 +48,7 @@ export default define.page(() => {
       COALESCE(contact_label, account_owner) as beneficiary 
     FROM draft_payments
     LEFT JOIN contacts ON contacts.id = draft_payments.beneficiary_id
-
+    WHERE status = 'hidden'
     `).all() as {
     id: string;
     amount?: number;

@@ -36,7 +36,9 @@ export const handler = define.handlers({
     const formdata = await ctx.req.formData();
     const id = formdata.get("process");
 
-    db.exec(`DELETE FROM draft_payments WHERE id = ${id}`);
+    db.exec(
+      `UPDATE draft_payments SET status = 'authorisation' WHERE id = ${id}`,
+    );
 
     return new Response(null, {
       status: 302,
