@@ -24,7 +24,7 @@ export function Button(props: ButtonProps) {
       {...props}
       type={props.type || "button"}
       class={cn(
-        "button-secondary flex flex-row gap-2 items-center px-2 py-1 cursor-pointer bg-blue-900 hover:bg-blue-800 duration-100 text-white transition-colors",
+        "button-secondary flex flex-row gap-2 items-center cursor-pointer bg-blue-900 hover:bg-blue-800 duration-100 text-white transition-colors",
         props.class,
         sizes[props.size ?? "medium"],
       )}
@@ -48,7 +48,7 @@ export function LinkButton(props: LinkProps) {
       {...props}
       href={props.href}
       class={cn(
-        "button-secondary flex flex-row gap-2 items-center px-2 py-1 cursor-pointer bg-blue-900 hover:bg-blue-800 duration-100 text-white transition-colors",
+        "button-secondary flex flex-row gap-2 items-center cursor-pointer bg-blue-900 hover:bg-blue-800 duration-100 text-white transition-colors",
         props.class,
         sizes[props.size ?? "medium"],
       )}
