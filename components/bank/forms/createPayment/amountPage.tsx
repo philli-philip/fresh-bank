@@ -2,12 +2,16 @@ import { ArrowRight } from "lucide-preact";
 import { Button } from "@/components/Button.tsx";
 import { Card } from "@/components/card.tsx";
 import { Contact } from "@/services/contacts.ts";
+import { Head } from "fresh/runtime";
 
 export function AmountPage(
   { beneficiary, process }: { beneficiary: Contact; process: number },
 ) {
   return (
     <form method="POST">
+      <Head>
+        <title>New Payment</title>
+      </Head>
       <main class="container mx-auto px-6">
         <Card className="px-12 py-8 mb-8 grid grid-rows-2">
           <div class="flex flex-row gap-2">

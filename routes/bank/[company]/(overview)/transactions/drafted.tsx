@@ -6,7 +6,8 @@ import {
   DropdownItem,
   DropdownMenu,
 } from "@/components/dropdown/dropdown.tsx";
-import { MoreVertical, Trash } from "lucide-preact";
+import { MoreVertical, Plus, Trash } from "lucide-preact";
+import { LinkButton } from "@/components/Button.tsx";
 
 export const handler = define.handlers({
   async POST(ctx) {
@@ -38,7 +39,13 @@ export default define.page(() => {
   }[];
   return (
     <div>
-      <h1 class="font-semibold pb-2">Drafted payments</h1>
+      <div class=" pb-2 flex flex-row justify-between gap-2 items-center">
+        <h1 class="font-semibold">Drafted payments</h1>
+        <LinkButton href="/bank/all/newPayment" size="small">
+          <Plus size="16" />
+          New payment
+        </LinkButton>
+      </div>
       <Card className="overflow-hidden">
         <ul>
           {drafted.map((item) => (

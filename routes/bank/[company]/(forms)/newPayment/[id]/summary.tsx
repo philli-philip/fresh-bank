@@ -1,9 +1,9 @@
 import { define } from "@/utils/utils.ts";
-import { Card } from "@/components/card.tsx";
 import Message from "@/components/message.tsx";
-import { Button, LinkButton } from "@/components/Button.tsx";
+import { LinkButton } from "@/components/Button.tsx";
 import { page } from "fresh";
 import { db } from "@/services/db.ts";
+import { SummaryPage } from "@/components/bank/forms/createPayment/summaryPage.tsx";
 
 export const handler = define.handlers({
   GET(ctx) {
@@ -30,7 +30,6 @@ export const handler = define.handlers({
       street?: null;
     };
 
-    console.log("Summary: ", summary);
     return page({ id, summary });
   },
   async POST(ctx) {
@@ -60,26 +59,5 @@ export default define.page<typeof handler>((props) => {
     );
   }
 
-  return (
-    <form method="POST">
-      <input hidden name="process" value={props.data.id} />
-      <Card className="px-12 py-6">
-        Summary
-        <div>
-          <span>Receipient</span>
-          <span>
-            {props.data.summary.contact_label ??
-              props.data.summary.account_owner}
-          </span>
-          <span>{props.data.summary.amount}</span>
-          <span>{props.data.summary.currency}</span>
-        </div>
-      </Card>
-      <div class="flex flex-row pt-4 justify-end">
-        <Button type="submit">
-          Submit payment
-        </Button>
-      </div>
-    </form>
-  );
+  return <SummaryPage summary={props.data.summary} id={props.data.id} />;
 });
