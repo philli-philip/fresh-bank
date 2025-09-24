@@ -2,9 +2,9 @@ import { Context } from "fresh";
 import { State } from "./utils.ts";
 
 export function extractNavigation(ctx: Context<State>) {
-  const item = ctx.url.pathname.split("/")[4] ?? undefined;
+  const item = ctx.params.id ?? undefined;
   const urlSection = ctx.url.pathname.split("/")[3] ?? "bank";
-  const company = ctx.url.pathname.split("/")[2] ?? "all";
+  const company = ctx.params.company ?? "all";
   return {
     item,
     urlSection,
