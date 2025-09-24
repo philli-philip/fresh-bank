@@ -9,7 +9,7 @@ export const handler = define.handlers({
     console.log(ctx.url.searchParams.get("search"));
     const search = ctx.url.searchParams.get("search")?.toString();
     const contacts = getContacts({
-      filter: `WHERE contact_label LIKE '%${search}%'`,
+      filter: search ? `WHERE contact_label LIKE '%${search}%'` : undefined,
     });
     return page({ contacts, search });
   },
