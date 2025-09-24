@@ -1,9 +1,11 @@
 import { ComponentChildren } from "preact";
 import { cn } from "../../utils/utils.ts";
 
-export function Dropdown({ children }: { children: ComponentChildren }) {
+export function Dropdown(
+  { children, className }: { children: ComponentChildren; className?: string },
+) {
   return (
-    <div class="relative inline-block text-left group">
+    <div class={cn("relative inline-block text-left group", className)}>
       {children}
     </div>
   );
@@ -18,7 +20,7 @@ export function DropdownMenu(
   return (
     <div
       class={cn(
-        "absolute py-1 w-56 rounded-md shadow-lg bg-white ring-1 ring-gray-200 ring-opacity-5 focus:outline-none opacity-0 invisible scale-y-0 transform origin-top transition-all duration-200 ease-in-out z-10 group-focus-within:opacity-100 group-focus-within:visible group-focus-within:scale-y-100",
+        "absolute py-1 w-56 rounded-md shadow-lg bg-white ring-1 ring-gray-200 focus:outline-none opacity-0 invisible scale-y-0 transform origin-top transition-all duration-200 ease-in-out z-10 group-focus-within:opacity-100 group-focus-within:visible group-focus-within:scale-y-100",
         position === "left" ? "left-0" : "right-0",
       )}
       role="menu"
