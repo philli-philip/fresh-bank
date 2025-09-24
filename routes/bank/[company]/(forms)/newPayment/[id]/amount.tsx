@@ -14,6 +14,7 @@ export const handler = define.handlers({
         id: string;
         beneficiary_id?: number;
         amount?: number;
+        reference_text?: string;
       };
 
     if (!process.beneficiary_id) {
@@ -26,7 +27,7 @@ export const handler = define.handlers({
     }
     const beneficiary = getContact(process.beneficiary_id);
 
-    return page({ beneficiary, id });
+    return page({ beneficiary, id, process });
   },
   async POST(ctx) {
     const formData = await ctx.req.formData();
@@ -59,6 +60,8 @@ export default define.page<typeof handler>((props) => {
     <AmountPage
       beneficiary={props.data.beneficiary}
       process={Number(props.data.id)}
+      amount={props.data.process.amount}
+      reference_text={props.data.process.reference_text}
     />
   );
 });

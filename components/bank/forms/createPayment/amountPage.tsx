@@ -5,7 +5,12 @@ import { Contact } from "@/services/contacts.ts";
 import { Head } from "fresh/runtime";
 
 export function AmountPage(
-  { beneficiary, process }: { beneficiary: Contact; process: number },
+  { beneficiary, process, amount, reference_text }: {
+    beneficiary: Contact;
+    process: number;
+    amount?: number;
+    reference_text?: string;
+  },
 ) {
   return (
     <form method="POST">
@@ -49,6 +54,7 @@ export function AmountPage(
                 placeholder="0.00"
                 class="p-4"
                 required
+                value={amount}
               />
             </div>
           </label>
@@ -60,6 +66,7 @@ export function AmountPage(
               class="border rounded border-gray-200 p-2"
               name="reference"
               type="text"
+              value={reference_text}
               placeholder="Payment reference or customer reference"
             />
           </label>
