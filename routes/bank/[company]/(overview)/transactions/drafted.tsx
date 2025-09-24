@@ -6,7 +6,7 @@ import {
   DropdownItem,
   DropdownMenu,
 } from "@/components/dropdown/dropdown.tsx";
-import { MoreVertical } from "lucide-preact";
+import { MoreVertical, Trash } from "lucide-preact";
 
 export const handler = define.handlers({
   async POST(ctx) {
@@ -16,6 +16,16 @@ export const handler = define.handlers({
     if (action === "delete" && id !== undefined) {
       db.prepare("DELETE FROM draft_payments WHERE id = ?").run(id);
     }
+
+    if (action === "edit" && id !== undefined) {
+      return new Response(null, {
+        status: 302,
+        headers: {
+          location: `/bank/all/newPayment/${id}/amount/`,
+        },
+      });
+    }
+
     return ctx.redirect("/bank/overview/transactions/drafted");
   },
 });
@@ -28,11 +38,11 @@ export default define.page(() => {
   }[];
   return (
     <div>
-      <h1>Drafted payments</h1>
-      <Card>
+      <h1 class="font-semibold pb-2">Drafted payments</h1>
+      <Card className="overflow-hidden">
         <ul>
           {drafted.map((item) => (
-            <li class="grid grid-cols-2 items-center px-4 py-3 justify-between not-last:border-b border-gray-200 relative">
+            <li class="grid isolate hover:bg-gray-100 duration-75 grid-cols-2 items-center px-4 py-3 justify-between not-last:border-b border-gray-200 relative">
               {item.id}
               <Dropdown className="place-self-end">
                 <button
@@ -46,11 +56,26 @@ export default define.page(() => {
                     <form method="POST">
                       <input hidden name="id" value={item.id} />
                       <input hidden name="action" value="delete" />
-                      <button type="submit">Delete</button>
+                      <button
+                        type="submit"
+                        class="w-full flex flex-row gap-2 items-center text-left text-red-600 px-4 py-2 cursor-pointer hover:bg-gray-100 duration-75"
+                      >
+                        <Trash size="20" />
+                        Delete
+                      </button>
                     </form>
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
+              <form method="POST">
+                <input hidden name="action" value="edit" />
+                <input hidden name="id" value={item.id} />
+                <button
+                  type="submit"
+                  class="absolute inset-0 z-10 cursor-pointer"
+                  aria-label="continue drafted payment"
+                />
+              </form>
             </li>
           ))}
         </ul>
