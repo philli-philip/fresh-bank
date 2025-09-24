@@ -18,8 +18,10 @@ export function AmountPage(
             <span>
               From:
             </span>
-            <span class="font-semibold">Main Account</span>
-            <span class="">Main Account</span>
+            <span class="flex flex-col">
+              <span class="font-semibold">Main Account</span>
+              <span class="">383897329239</span>
+            </span>
           </div>
 
           <div class="flex flex-row gap-2">
