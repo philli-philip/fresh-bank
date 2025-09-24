@@ -4,8 +4,9 @@ import { TransactionList } from "@/components/bank/transactionList.tsx";
 import { extractNavigation } from "@/utils/navigation.ts";
 import { Context } from "fresh";
 import { State } from "@/utils/utils.ts";
-import { getTransactionsSummary } from "../../../../../services/transactions.ts";
-import Message from "../../../../../components/message.tsx";
+import { getTransactionsSummary } from "@/services/transactions.ts";
+import Message from "@/components/message.tsx";
+import { PageHeader } from "@/components/bank/pageHeader.tsx";
 
 export default function TransactionsView(ctx: Context<State>) {
   const { item } = extractNavigation(ctx);
@@ -16,9 +17,7 @@ export default function TransactionsView(ctx: Context<State>) {
   });
   return (
     <>
-      <Head>
-        <title>Transactions</title>
-      </Head>
+      <PageHeader title="Transactions" />
       <Card>
         {transactions.length === 0
           ? <Message title="No transactions found" />
