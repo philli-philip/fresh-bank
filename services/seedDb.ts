@@ -95,7 +95,7 @@ db.exec(`
     amount INTEGER,
     reference_text TEXT,
     currency TEXT DEFAULT 'EUR',
-    status TEXT CHECK(status IN ('hidden', 'authorisation')) DEFAULT hidden
+    status TEXT CHECK(status IN ('private', 'draft', 'authorisation' , 'scheduled')) DEFAULT private
   )`);
 
 const countries = ["IT", "DE", "US"];
