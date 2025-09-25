@@ -72,7 +72,7 @@ export const Transaction = (
             : "text-red-700 bg-red-50 before:content-['-_']",
         )}
       >
-        {renderAmountWithoutCurrency(parseInt(transaction.amount) / 100)}
+        {renderAmountWithoutCurrency(parseInt(transaction.amount))}
       </span>
     </span>
     <span>

@@ -11,7 +11,7 @@ export function renderAmount(
     currencyDisplay: showCurreny ?? true ? "code" : undefined,
   });
 
-  return formatter.format(cent);
+  return formatter.format(cent / 100);
 }
 
 export function renderAmountWithoutCurrency(

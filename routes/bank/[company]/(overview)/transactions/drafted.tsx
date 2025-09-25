@@ -75,7 +75,7 @@ export default define.page(() => {
             <li class="hover:bg-gray-100 duration-75 grid grid-cols-4 items-center px-4 py-3 justify-between not-last:border-b border-gray-200 relative">
               <span class="font-semibold">{item.id}</span>
               {item.amount
-                ? <span>{renderAmount(item.amount / 100, item.currency)}</span>
+                ? <span>{renderAmount(item.amount, item.currency)}</span>
                 : <span class="text-gray-500">Not set</span>}
               {item.beneficiary
                 ? <span>{item.beneficiary}</span>
