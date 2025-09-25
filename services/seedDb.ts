@@ -94,6 +94,7 @@ db.exec(`
     beneficiary_id INTEGER,
     amount INTEGER,
     reference_text TEXT,
+    currency TEXT DEFAULT 'EUR',
     status TEXT CHECK(status IN ('hidden', 'authorisation')) DEFAULT hidden
   )`);
 
