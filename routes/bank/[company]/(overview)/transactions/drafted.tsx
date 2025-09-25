@@ -10,12 +10,7 @@ import { MoreVertical, Plus, Trash } from "lucide-preact";
 import { LinkButton } from "@/components/Button.tsx";
 import { PageHeader } from "@/components/bank/pageHeader.tsx";
 import Message from "@/components/message.tsx";
-
-const amountFormatter = Intl.NumberFormat("de-DE", {
-  minimumFractionDigits: 2,
-  style: "currency",
-  currency: "EUR",
-});
+import { renderAmount } from "@/utils/formats.ts";
 
 export const handler = define.handlers({
   async POST(ctx) {
@@ -44,15 +39,16 @@ export default define.page(() => {
     SELECT 
       draft_payments.id,
       amount,
-      currency,
+      draft_payments.currency,
       COALESCE(contact_label, account_owner) as beneficiary 
     FROM draft_payments
     LEFT JOIN contacts ON contacts.id = draft_payments.beneficiary_id
-    WHERE status = 'hidden'
+    WHERE status = 'draft'
     `).all() as {
     id: string;
     amount?: number;
     beneficiary?: string;
+    currency: string;
   }[];
   return (
     <>
@@ -79,7 +75,7 @@ export default define.page(() => {
             <li class="hover:bg-gray-100 duration-75 grid grid-cols-4 items-center px-4 py-3 justify-between not-last:border-b border-gray-200 relative">
               <span class="font-semibold">{item.id}</span>
               {item.amount
-                ? <span>{amountFormatter.format(item.amount / 100)}</span>
+                ? <span>{renderAmount(item.amount / 100, item.currency)}</span>
                 : <span class="text-gray-500">Not set</span>}
               {item.beneficiary
                 ? <span>{item.beneficiary}</span>

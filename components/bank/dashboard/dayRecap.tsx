@@ -1,12 +1,7 @@
 import { Card } from "@/components/card.tsx";
 import { db } from "@/services/db.ts";
 import { ChevronRight } from "lucide-preact";
-
-const amountFormat = Intl.NumberFormat("en-US", {
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 3,
-  maximumSignificantDigits: 6,
-});
+import { renderAmountWithoutCurrency } from "../../../utils/formats.ts";
 
 const NumberFormat = Intl.NumberFormat("en-US", {});
 
@@ -52,7 +47,7 @@ WHERE
           <ChevronRight size="12" />
         </span>
         <span class="text-4xl font-semibold">
-          {amountFormat.format(data.sum_amount / 100)}
+          {renderAmountWithoutCurrency(data.sum_amount / 100)}
         </span>
       </a>
     </Card>

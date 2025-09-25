@@ -2,11 +2,7 @@ import { MoveLeft, MoveRight } from "npm:lucide-preact";
 import { sinceDate } from "../../utils/temporal.ts";
 import { TransactionSummary } from "../../utils/types.ts";
 import { cn } from "../../utils/utils.ts";
-
-const formatter = new Intl.NumberFormat("en-US", {
-  style: "decimal",
-  minimumFractionDigits: 2,
-});
+import { renderAmountWithoutCurrency } from "../../utils/formats.ts";
 
 const dateFormatter = new Intl.DateTimeFormat("en-US", {
   year: "numeric",
@@ -23,7 +19,6 @@ export function TransactionList(
       hx-ext="sse"
       sse-connect="/api/sse"
       sse-swap="message"
-      
       hx-swap="afterbegin"
       class="divide-y divide-gray-200 border border-gray-200 rounded bg-white"
     >
@@ -77,7 +72,7 @@ export const Transaction = (
             : "text-red-700 bg-red-50 before:content-['-_']",
         )}
       >
-        {formatter.format(parseInt(transaction.amount) / 100)}
+        {renderAmountWithoutCurrency(parseInt(transaction.amount) / 100)}
       </span>
     </span>
     <span>
