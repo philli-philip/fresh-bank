@@ -10,6 +10,7 @@ export interface ButtonProps {
   type?: "button" | "submit" | "reset";
   class?: string;
   size?: "small" | "medium" | "large";
+  style?: "primary" | "red";
 }
 
 const sizes = {
@@ -18,15 +19,21 @@ const sizes = {
   large: "px-6 py-3 gap-4 rounded-sm",
 };
 
+const style = {
+  primary: "bg-blue-800 hover:bg-blue-700 text-white",
+  red: "bg-red-700 hover:bg-red-600 text-white",
+};
+
 export function Button(props: ButtonProps) {
   return (
     <button
       {...props}
       type={props.type || "button"}
       class={cn(
-        "button-secondary flex flex-row gap-2 items-center cursor-pointer bg-blue-900 hover:bg-blue-800 duration-100 text-white transition-colors",
+        "button-secondary flex flex-row gap-2 items-center cursor-pointer duration-100 transition-colors",
         props.class,
         sizes[props.size ?? "medium"],
+        style[props.style ?? "primary"],
       )}
     />
   );
@@ -40,6 +47,7 @@ interface LinkProps {
   type?: "button" | "submit" | "reset";
   class?: string;
   size?: "small" | "medium" | "large";
+  style?: "primary" | "red";
 }
 
 export function LinkButton(props: LinkProps) {
@@ -48,9 +56,10 @@ export function LinkButton(props: LinkProps) {
       {...props}
       href={props.href}
       class={cn(
-        "button-secondary flex flex-row gap-2 items-center cursor-pointer bg-blue-900 hover:bg-blue-800 duration-100 text-white transition-colors",
+        "button-secondary flex flex-row gap-2 items-center cursor-pointer duration-100 transition-colors",
         props.class,
         sizes[props.size ?? "medium"],
+        style[props.style ?? "primary"],
       )}
     >
       {props.children}
