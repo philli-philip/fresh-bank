@@ -16,9 +16,7 @@ export function TransactionList(
   return (
     <ul
       id="transaction-list"
-      hx-ext="sse"
-      sse-connect="/api/sse"
-      sse-swap="message"
+      sse-swap="transaction"
       hx-swap="afterbegin"
       class="divide-y divide-gray-200 border border-gray-200 rounded bg-white"
     >

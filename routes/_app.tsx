@@ -21,11 +21,17 @@ export default define.page((ctx) => {
 
         <title>fresh-to-do</title>
       </head>
-      <body class="bg-gray-50 min-h-screen pb-24 flex flex-col ">
+      <body
+        class="bg-gray-50 min-h-screen pb-24 flex flex-col"
+        hx-ext="sse"
+        sse-connect="/api/sse"
+      >
         {/* Toast container for notifications */}
         <div
+          sse-swap="toast"
+          hx-swap="innerHTML"
           id="toast-container"
-          class="fixed"
+          class="fixed bottom-0 right-0 pb-8 pr-4 z-100"
         >
         </div>
 

@@ -8,6 +8,7 @@ import { createResponse, Session } from "@mwid/better-sse";
 import { renderToString } from "npm:preact-render-to-string";
 import { Transaction } from "./components/bank/transactionList.tsx";
 import { probability } from "./utils/random.ts";
+import Toast from "./components/toast.tsx";
 
 export const app = new App<State>();
 let sseSession: Session | undefined = undefined;
@@ -73,6 +74,12 @@ app.use(trailingSlashes("never"));
 app.fsRoutes();
 
 setInterval(() => {
+  if (sseSession) {
+    sseSession.push(renderToString(<Toast />), "toast");
+  }
+}, 1000 * 60);
+
+setInterval(() => {
   if (probability(0.1)) {
     try {
       const transaction = {
@@ -94,15 +101,18 @@ setInterval(() => {
         id: Number(transID.lastInsertRowid),
       });
       if (newTransaction && sseSession) {
-        sseSession.push(renderToString(
-          <div class="animate-new">
-            <Transaction
-              transaction={{
-                ...newTransaction,
-              }}
-            />
-          </div>,
-        ));
+        sseSession.push(
+          renderToString(
+            <div class="animate-new">
+              <Transaction
+                transaction={{
+                  ...newTransaction,
+                }}
+              />
+            </div>,
+          ),
+          "transaction",
+        );
       }
     } catch (error) {
       console.log("create transaction error: ", error);
