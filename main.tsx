@@ -4,14 +4,12 @@ import { addTodo, deleteTodo, toggleTodo } from "./services/todos.ts";
 import { createTransaction, getTransaction } from "./services/transactions.ts";
 import Message from "./components/message.tsx";
 import { generateQuickHash } from "./utils/hash.ts";
-import { createResponse, Session } from "@mwid/better-sse";
-import { renderToString } from "npm:preact-render-to-string";
+import { createSseResponse, pushHtml } from "./utils/sse.ts";
 import { Transaction } from "./components/bank/transactionList.tsx";
 import { probability } from "./utils/random.ts";
 import Toast from "./components/toast.tsx";
 
 export const app = new App<State>();
-let sseSession: Session | undefined = undefined;
 
 console.log("Debugging set to:", Deno.env.get("IS_DEV"));
 
@@ -48,11 +46,7 @@ app.post("/api/todos/create", async (ctx: Context<State>) => {
 });
 
 app.get("/api/sse", (ctx: Context<State>) => {
-  return createResponse(ctx.req, {
-    serializer: (e) => e as string,
-  }, (session) => {
-    sseSession = session;
-  });
+  return createSseResponse(ctx);
 });
 
 app.post("/api/todos/delete", async (ctx: Context<State>) => {
@@ -74,10 +68,8 @@ app.use(trailingSlashes("never"));
 app.fsRoutes();
 
 setInterval(() => {
-  if (sseSession) {
-    sseSession.push(renderToString(<Toast />), "toast");
-  }
-}, 1000 * 60);
+  pushHtml(<Toast message="Helllooooo" />, "toast");
+}, 1000 * 80);
 
 setInterval(() => {
   if (probability(0.1)) {
@@ -100,17 +92,15 @@ setInterval(() => {
       const newTransaction = getTransaction({
         id: Number(transID.lastInsertRowid),
       });
-      if (newTransaction && sseSession) {
-        sseSession.push(
-          renderToString(
-            <div class="animate-new">
-              <Transaction
-                transaction={{
-                  ...newTransaction,
-                }}
-              />
-            </div>,
-          ),
+      if (newTransaction) {
+        pushHtml(
+          <div class="animate-new">
+            <Transaction
+              transaction={{
+                ...newTransaction,
+              }}
+            />
+          </div>,
           "transaction",
         );
       }
