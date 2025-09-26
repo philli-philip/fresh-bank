@@ -21,9 +21,36 @@ export const handler = define.handlers({
     try {
       if (action === "approve") {
         isDev() && console.log("Let's approve");
-        db.prepare(
-          `UPDATE draft_payments SET status = 'scheduled' WHERE id = ${id}`,
-        ).run();
+
+        const draftPayment = db.prepare(
+          `SELECT beneficiary_data FROM draft_payments WHERE id = ${id}`,
+        ).get() as { beneficiary_data: string | null };
+
+        if (draftPayment?.beneficiary_data) {
+          const beneficiary = JSON.parse(draftPayment.beneficiary_data);
+          const contactInsert = db.prepare(
+            `INSERT INTO contacts (account_owner, contact_label, account_number, bank, currency, town, city, eMail, country) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          ).run(
+            beneficiary.account_holder,
+            beneficiary.account_holder, // Using account_holder as contact_label for now
+            beneficiary.account_number,
+            beneficiary.bank,
+            "EUR", // Assuming default currency for new beneficiaries
+            beneficiary.town,
+            beneficiary.email,
+            beneficiary.country,
+          );
+
+          const newBeneficiaryId = contactInsert.lastInsertRowid;
+
+          db.prepare(
+            `UPDATE draft_payments SET status = 'scheduled', beneficiary_id = ${newBeneficiaryId}, beneficiary_data = NULL WHERE id = ${id}`,
+          ).run();
+        } else {
+          db.prepare(
+            `UPDATE draft_payments SET status = 'scheduled' WHERE id = ${id}`,
+          ).run();
+        }
       }
 
       if (action === "reject") {

@@ -1,4 +1,3 @@
-import { Head } from "fresh/runtime";
 import { Contact } from "@/services/contacts.ts";
 import { Card } from "@/components/card.tsx";
 import { countryFlags } from "@/data/countries.ts";
@@ -10,13 +9,7 @@ export function ContactList(
   { contacts, search }: { contacts: Contact[]; search?: string },
 ) {
   return (
-    <main>
-      <Head>
-        <title>New Payment</title>
-      </Head>
-      <h1 class="text-xl pt-3 pb-6 font-semibold">
-        Beneficiary
-      </h1>
+    <>
       <Card>
         <Search search={search} />
         {contacts.length === 0
@@ -69,7 +62,7 @@ export function ContactList(
           <ArrowRight />
         </Button>
       </div>
-    </main>
+    </>
   );
 }
 
@@ -86,7 +79,9 @@ function Search({ search }: { search: string | undefined }) {
           value={search}
         />
       </form>
-      <a>New beneficiary</a>
+      <LinkButton style="link" href="?new_beneficiary=true">
+        New beneficiary
+      </LinkButton>
     </div>
   );
 }

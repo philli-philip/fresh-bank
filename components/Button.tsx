@@ -9,8 +9,8 @@ export interface ButtonProps {
   disabled?: boolean;
   type?: "button" | "submit" | "reset";
   class?: string;
-  size?: "small" | "medium" | "large";
-  style?: "primary" | "red";
+  size?: keyof typeof sizes;
+  style?: keyof typeof styles;
 }
 
 const sizes = {
@@ -19,9 +19,13 @@ const sizes = {
   large: "px-6 py-3 gap-4 rounded-sm",
 };
 
-const style = {
-  primary: "bg-blue-800 hover:bg-blue-700 text-white",
-  red: "bg-red-700 hover:bg-red-600 text-white",
+const styles = {
+  primary: "bg-blue-700 hover:bg-blue-900 text-white",
+  red: "bg-red-600 hover:bg-red-900 text-white",
+  ghost: "bg-blue-50 hover:bg-blue-900 text-blue-900 hover:text-white",
+  outline:
+    "border border-blue-700 text-blue-700 hover:bg-blue-900 hover:text-white hover:border-blue-900",
+  link: "bg-transparent text-blue-700 hover:bg-blue-900 hover:text-white  ",
 };
 
 export function Button(props: ButtonProps) {
@@ -33,7 +37,7 @@ export function Button(props: ButtonProps) {
         "button-secondary flex flex-row gap-2 items-center cursor-pointer duration-100 transition-colors",
         props.class,
         sizes[props.size ?? "medium"],
-        style[props.style ?? "primary"],
+        styles[props.style ?? "primary"],
       )}
     />
   );
@@ -44,10 +48,9 @@ interface LinkProps {
   href?: string;
   children?: ComponentChildren;
   disabled?: boolean;
-  type?: "button" | "submit" | "reset";
   class?: string;
-  size?: "small" | "medium" | "large";
-  style?: "primary" | "red";
+  size?: keyof typeof sizes;
+  style?: keyof typeof styles;
 }
 
 export function LinkButton(props: LinkProps) {
@@ -59,7 +62,7 @@ export function LinkButton(props: LinkProps) {
         "button-secondary flex flex-row gap-2 items-center cursor-pointer duration-100 transition-colors",
         props.class,
         sizes[props.size ?? "medium"],
-        style[props.style ?? "primary"],
+        styles[props.style ?? "primary"],
       )}
     >
       {props.children}
