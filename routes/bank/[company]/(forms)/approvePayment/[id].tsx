@@ -18,24 +18,38 @@ export const handler = define.handlers({
     const formdata = await ctx.req.formData();
     const action = formdata.get("action");
 
-    if (action === "approve") {
-      isDev() && console.log("Let's approve");
-      db.prepare(
-        `UPDATE draft_payments SET status = 'scheduled' WHERE id = ${id}`,
-      ).run();
-    }
+    try {
+      if (action === "approve") {
+        isDev() && console.log("Let's approve");
+        db.prepare(
+          `UPDATE draft_payments SET status = 'scheduled' WHERE id = ${id}`,
+        ).run();
+      }
 
-    if (action === "reject") {
-      isDev() && console.log("Let's reject");
-      db.prepare(`
-        DELETE FROM draft_payments
-        WHERE id = ${id}
-        `).run();
-    }
+      if (action === "reject") {
+        isDev() && console.log("Let's reject");
+        db.prepare(`
+          DELETE FROM draft_payments
+          WHERE id = ${id}
+          `).run();
+      }
 
-    return new Response(null, {
-      status: 200,
-    });
+      return new Response(null, {
+        status: 302,
+        headers: {
+          location: `./../`,
+        },
+      });
+    } catch (e) {
+      console.log(
+        e instanceof Error
+          ? e.message
+          : "Error while processing payment approve or reject",
+      );
+      return new Response(null, {
+        status: 500,
+      });
+    }
   },
 });
 
