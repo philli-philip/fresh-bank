@@ -91,7 +91,7 @@ db.exec(`
 db.exec(`
   CREATE TABLE IF NOT EXISTS draft_payments(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    beneficiary_data TEXT,
+    beneficiary_data JSON,
     amount INTEGER,
     reference_text TEXT,
     currency TEXT DEFAULT 'EUR',

@@ -4,6 +4,7 @@ import { LinkButton } from "@/components/Button.tsx";
 import { page } from "fresh";
 import { db } from "@/services/db.ts";
 import { SummaryPage } from "@/components/bank/forms/createPayment/summaryPage.tsx";
+import { Contact } from "@/utils/types.ts";
 
 export const handler = define.handlers({
   GET(ctx) {
@@ -13,21 +14,12 @@ export const handler = define.handlers({
       SELECT
         *
       FROM draft_payments
-      LEFT JOIN contacts ON draft_payments.beneficiary_id = contacts.id
       WHERE draft_payments.id = ${id}
       `).get() as unknown as {
-      process: number;
-      amount: number;
+      id: string;
+      beneficiary_data: string;
+      amount?: number;
       reference_text?: string;
-      account_owner: string;
-      contact_label?: string;
-      account_number: string;
-      bank: string;
-      currency: string;
-      town?: string;
-      country?: string;
-      eMail?: null;
-      street?: null;
     };
 
     return page({ id, summary });
@@ -61,5 +53,15 @@ export default define.page<typeof handler>((props) => {
     );
   }
 
-  return <SummaryPage summary={props.data.summary} id={props.data.id} />;
+  return (
+    <SummaryPage
+      payment={{
+        amount: props.data.summary.amount ?? 0,
+        reference: props.data.summary.reference_text,
+      }}
+      process={Number(props.data.id)}
+      beneficiary={JSON.parse(props.data.summary.beneficiary_data) as Contact}
+      id={props.data.id}
+    />
+  );
 });

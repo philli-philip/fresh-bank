@@ -1,8 +1,8 @@
 import { ArrowRight } from "lucide-preact";
 import { Button } from "@/components/Button.tsx";
 import { Card } from "@/components/card.tsx";
-import { Contact } from "@/services/contacts.ts";
 import { Head } from "fresh/runtime";
+import { Contact } from "@/utils/types.ts";
 
 export function AmountPage(
   { beneficiary, process, amount, reference_text }: {
@@ -33,7 +33,7 @@ export function AmountPage(
             <span>To:</span>
             <span class="flex-col">
               <span class="block font-semibold">
-                {beneficiary.contact_label}
+                {beneficiary.contact_label ?? beneficiary.account_owner}
               </span>
               <span class="block">{beneficiary.account_number}</span>
             </span>

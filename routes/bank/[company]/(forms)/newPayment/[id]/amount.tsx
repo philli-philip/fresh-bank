@@ -2,7 +2,6 @@ import { page } from "fresh";
 import { define, isDev } from "@/utils/utils.ts";
 import { db } from "@/services/db.ts";
 import { AmountPage } from "@/components/bank/forms/createPayment/amountPage.tsx";
-import { getContact } from "@/services/contacts.ts";
 
 export const handler = define.handlers({
   GET(ctx) {
@@ -12,22 +11,19 @@ export const handler = define.handlers({
     )
       .get() as unknown as {
         id: string;
-        beneficiary_id?: number;
+        beneficiary_data: string;
         amount?: number;
         reference_text?: string;
       };
 
-    if (!process.beneficiary_id) {
+    if (!process.beneficiary_data) {
       return new Response(null, {
         status: 302,
-        headers: {
-          location: "./",
-        },
       });
     }
-    const beneficiary = getContact(process.beneficiary_id);
 
-    return page({ beneficiary, id, process });
+    console.log("Bene:", process.beneficiary_data);
+    return page({ id, process });
   },
   async POST(ctx) {
     const formData = await ctx.req.formData();
@@ -58,7 +54,7 @@ export const handler = define.handlers({
 export default define.page<typeof handler>((props) => {
   return (
     <AmountPage
-      beneficiary={props.data.beneficiary}
+      beneficiary={JSON.parse(props.data.process.beneficiary_data)}
       process={Number(props.data.id)}
       amount={props.data.process.amount}
       reference_text={props.data.process.reference_text}

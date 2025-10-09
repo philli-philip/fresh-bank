@@ -19,6 +19,32 @@ export type TransactionSummary = {
   credit_account_id: number | null;
 };
 
+export interface Contact {
+  id: number;
+  account_owner: string;
+  contact_label: string;
+  account_number: string;
+  bank: string;
+  currency: string;
+  town: string;
+  country: string;
+  email: string;
+  street: string;
+}
+
+export type DraftPaymentBeneficiary = {
+  id: number;
+  account_owner: string;
+  contact_label?: string;
+  account_number: string;
+  bank: string;
+  currency: string;
+  town: string;
+  country: string;
+  email?: string;
+  street?: string;
+};
+
 export type Account = {
   id: number;
   number: string;

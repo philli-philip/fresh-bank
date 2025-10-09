@@ -3,24 +3,17 @@ import { Card } from "@/components/card.tsx";
 import { AlertTriangle } from "lucide-preact";
 import { PageHeader } from "../../pageHeader.tsx";
 import PaymentSummary from "./paymentSummary.tsx";
+import { Contact } from "@/utils/types.ts";
 
 export function SummaryPage(
-  { summary, id }: {
+  { id, payment, beneficiary }: {
     id: string;
-    summary: {
-      process: number;
+    process: number;
+    payment: {
       amount: number;
-      reference_text?: string;
-      account_owner: string;
-      contact_label?: string;
-      account_number: string;
-      bank: string;
-      currency: string;
-      town?: string;
-      country?: string;
-      eMail?: null;
-      street?: null;
+      reference?: string;
     };
+    beneficiary: Contact;
   },
 ) {
   return (
@@ -29,12 +22,12 @@ export function SummaryPage(
       <input hidden name="process" value={id} />
       <PaymentSummary
         payment={{
-          amount: summary.amount,
-          account_owner: summary.account_owner,
-          account_number: summary.account_number,
-          bank: summary.bank,
-          currency: summary.currency,
-          reference_text: summary.reference_text,
+          amount: payment.amount,
+          account_owner: beneficiary.account_owner,
+          account_number: beneficiary.account_number,
+          bank: beneficiary.bank,
+          currency: beneficiary.currency,
+          reference_text: payment.reference,
         }}
       />
       <Card className="px-12 py-8 mb-6 bg-blue-100 flex gap-4 flex-row">

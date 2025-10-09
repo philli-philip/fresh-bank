@@ -1,17 +1,5 @@
+import { Contact } from "@/utils/types.ts";
 import { db } from "./db.ts";
-
-export interface Contact {
-  id: number;
-  account_owner: string;
-  contact_label: string;
-  account_number: string;
-  bank: string;
-  currency: string;
-  town: string;
-  country: string;
-  eMail: string;
-  street: string;
-}
 
 export function getContacts(options?: { filter?: string }) {
   return db.prepare(`

@@ -4,6 +4,7 @@ import { ContactList } from "@/components/bank/forms/createPayment/contactList.t
 import { NewBeneficiaryForm } from "@/components/bank/forms/createPayment/newBeneficiaryForm.tsx";
 import { getContacts } from "@/services/contacts.ts";
 import { db } from "@/services/db.ts";
+import { Contact } from "@/utils/types.ts";
 
 export const handler = define.handlers({
   GET(ctx) {
@@ -18,14 +19,17 @@ export const handler = define.handlers({
   },
   async POST(ctx) {
     const form = await ctx.req.formData();
+    console.log("form:", form);
     const accountHolder = form.get("account_holder");
+
+    console.log("account holder:", accountHolder);
 
     let lastInsertRowid;
 
     if (accountHolder) {
       // New beneficiary submission
       const beneficiaryData = {
-        account_holder: accountHolder,
+        account_owner: accountHolder,
         town: form.get("town"),
         account_number: form.get("account_number"),
         bank: form.get("bank"),
@@ -40,9 +44,18 @@ export const handler = define.handlers({
     } else {
       // Existing beneficiary selection
       const bene_id = form.get("beneficiary");
+      const beneficiary = db.prepare(
+        `SELECT * FROM contacts WHERE id = ${bene_id}`,
+      ).get() as Contact | undefined;
+      if (!beneficiary) {
+        return new Response(
+          "Beneficiary not found",
+          { status: 404 },
+        );
+      }
       const data = db.prepare(
-        `INSERT INTO draft_payments (beneficiary_id) VALUES(${bene_id})`,
-      ).run();
+        `INSERT INTO draft_payments (beneficiary_data) VALUES(?)`,
+      ).run(JSON.stringify(beneficiary));
       lastInsertRowid = data.lastInsertRowid;
     }
 
@@ -52,7 +65,7 @@ export const handler = define.handlers({
       {
         status: 302,
         headers: {
-          location: `./newPayment/${lastInsertRowid}/amount`,
+          location: `./newPayment/${lastInsertRowid}/amount/`,
         },
       },
     );

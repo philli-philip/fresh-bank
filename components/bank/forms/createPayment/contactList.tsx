@@ -1,4 +1,4 @@
-import { Contact } from "@/services/contacts.ts";
+import { Contact } from "@/utils/types.ts";
 import { Card } from "@/components/card.tsx";
 import { countryFlags } from "@/data/countries.ts";
 import { Button, LinkButton } from "@/components/Button.tsx";

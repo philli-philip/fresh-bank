@@ -10,10 +10,9 @@ export default function Page() {
     `SELECT
       *,
       draft_payments.id as id,
-      COALESCE(contacts.contact_label, contacts.account_owner) as name
+      COALESCE(beneficiary_data->>'contact_label', beneficiary_data->>'account_owner') as name
     FROM
       draft_payments
-      LEFT JOIN contacts ON contacts.id = draft_payments.beneficiary_id
     WHERE
 	    status = 'authorisation'`,
   ).all() as {

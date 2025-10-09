@@ -28,24 +28,27 @@ export const handler = define.handlers({
 
         if (draftPayment?.beneficiary_data) {
           const beneficiary = JSON.parse(draftPayment.beneficiary_data);
-          const contactInsert = db.prepare(
-            `INSERT INTO contacts (account_owner, contact_label, account_number, bank, currency, town, city, eMail, country) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-          ).run(
-            beneficiary.account_holder,
-            beneficiary.account_holder, // Using account_holder as contact_label for now
+          const contactInsert = db.prepare(`INSERT INTO contacts (
+              account_owner, 
+              contact_label, 
+              account_number, 
+              bank, 
+              currency,
+              country,
+              town, 
+              eMail, 
+              street
+              ) VALUES (?,?,?,?,?,?,?,?,?)`).run(
+            beneficiary.account_owner,
+            beneficiary.contact_label,
             beneficiary.account_number,
             beneficiary.bank,
-            "EUR", // Assuming default currency for new beneficiaries
-            beneficiary.town,
-            beneficiary.email,
+            beneficiary.currency,
             beneficiary.country,
+            beneficiary.town,
           );
 
-          const newBeneficiaryId = contactInsert.lastInsertRowid;
-
-          db.prepare(
-            `UPDATE draft_payments SET status = 'scheduled', beneficiary_id = ${newBeneficiaryId}, beneficiary_data = NULL WHERE id = ${id}`,
-          ).run();
+          console.log("inserted contact:", contactInsert);
         } else {
           db.prepare(
             `UPDATE draft_payments SET status = 'scheduled' WHERE id = ${id}`,
@@ -83,10 +86,10 @@ export const handler = define.handlers({
 export default define.page<typeof handler>((props) => {
   const item = db.prepare(`
         SELECT
-            *
+            *,
+            COALESCE(beneficiary_data->>'contact_label', beneficiary_data->>'account_owner') as account_owner
         FROM
             draft_payments
-            LEFT JOIN contacts ON contacts.id = draft_payments.beneficiary_id
         WHERE
             draft_payments.id = ${Number(props.data.id)}`).get() as {
     status: string;
